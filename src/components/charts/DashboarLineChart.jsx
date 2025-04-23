@@ -1,8 +1,15 @@
-import {useState} from 'react'
-import Chart from 'react-apexcharts'
+"use client";
+
+import {useState} from "react";
+import dynamic from "next/dynamic";
+
+// only load react-apexcharts in the browser
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 const DashboarLineChart = () => {
-     const [options] = useState({
-      colors: ["#465fff"],
+  const [options] = useState({
+    colors: ["#465fff"],
     chart: {
       fontFamily: "Outfit, sans-serif",
       type: "bar",
@@ -78,16 +85,16 @@ const DashboarLineChart = () => {
         formatter: (val) => `${val}`,
       },
     },
-  })
+  });
   const series = [
     {
       name: "Sales",
       data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
     },
   ];
- 
+
   return (
-    <Chart
+    <ReactApexChart
       options={options}
       series={series}
       type="bar"
@@ -95,6 +102,6 @@ const DashboarLineChart = () => {
       height={180}
     />
   );
-}
+};
 
-export default DashboarLineChart
+export default DashboarLineChart;

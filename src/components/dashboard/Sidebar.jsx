@@ -4,6 +4,7 @@ import { MdDashboardCustomize } from "react-icons/md";
 const Sidebar = ({ isOpen, selected, onSelect }) => {
   const menuItems = [
     { key: "dashboard", label: "Dashboard" },
+    { key: "reports", label: "Reports" },
     { key: "profile", label: "Profile" },
     { key: "settings", label: "Settings" },
     { key: "logout", label: "Logout" },
@@ -11,7 +12,7 @@ const Sidebar = ({ isOpen, selected, onSelect }) => {
   return (
     <aside
       className={`
-        fixed top-16 overflow-y-scroll lg:top-0 left-0 h-full bg-white  shadow-sm
+        fixed top-16 overflow-y-scroll lg:top-0 left-0 h-full bg-white text-gray-500 shadow-sm
         transform transition-all duration-300 z-20
         ${
           isOpen
@@ -42,7 +43,7 @@ const Sidebar = ({ isOpen, selected, onSelect }) => {
                 ${selected === key ? "bg-gray-200 rounded-lg" : ""}
               `}
             >
-              <MdDashboardCustomize size={20} className="text-gray-700"/>
+              <MdDashboardCustomize size={20} className="text-gray-500"/>
               {isOpen && <span className="ml-3">{label}</span>}
             </li>
           ))}

@@ -94,7 +94,7 @@ const LineChart = () => {
     },
   ];
   return (
-    <div className="mt-5 bg-white rounded-lg border border-gray-200 p-4 overflow-hidden">
+    <div className="w-full mt-5 bg-white rounded-lg border border-gray-200 p-4 overflow-x-hidden">
       <ReactApexChart
         series={series}
         type="area"

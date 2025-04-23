@@ -1,11 +1,8 @@
-import HomeHero from '@/components/heros/HomeHero'
 import React from 'react'
 
 const page = () => {
   return (
-    <>
-    <HomeHero/>
-    </>
+    <div>About Us</div>
   )
 }
 

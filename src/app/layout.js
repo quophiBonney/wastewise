@@ -9,7 +9,7 @@ export default function RootLayout({ children }) {
  const noFooter = ["/auth/signin", "/auth/signup", "/auth/admin"];
   return (
     <html lang="en">
-      <body suppressHydrationWarning className={`bg-gray-100 antialiased`}>
+      <body suppressHydrationWarning className={`bg-gray-50 antialiased`}>
         {!noFooter.includes(pathname) && <NavbarComp />}
         <main className="">{children}</main>
         {

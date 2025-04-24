@@ -6,7 +6,7 @@ const HomeHero = () => {
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="flex flex-col justify-center items-center space-y-6 md:space-y-4">
-        <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold">
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-shadow-lg text-gray-900">
           WASTE WISE
         </h1>
         <p className="text-center">

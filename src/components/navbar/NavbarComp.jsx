@@ -8,7 +8,7 @@ const NavbarComp = () => {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "bin centres", label: "Bin Centres" },
+    { href: "bin/centres", label: "Bin Centres" },
     { href: "about", label: "About" },
     { href: "report", label: "Report An Issue" },
   ];
@@ -44,9 +44,9 @@ const NavbarComp = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md  hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-500 transition-colors duration-200 bg-green-600 text-white"
+              className="inline-flex items-center justify-center p-2 rounded-md transition-colors duration-200 bg-green-600 text-white"
             >
-              {isOpen ? <IoCloseSharp size={20}/> : <BiMenuAltRight size={20}/>}
+              {isOpen ? <IoCloseSharp size={25}/> : <BiMenuAltRight size={25}/>}
             </button>
           </div>
         </div>

@@ -13,7 +13,7 @@ const NavbarComp = () => {
 
   return (
       <nav className="fixed top-0 w-full bg-white/50 backdrop-blur-sm border-b border-gray-200 z-50">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="px-5 lg:px-10">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex-shrink-0">

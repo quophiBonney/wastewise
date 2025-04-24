@@ -10,8 +10,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body suppressHydrationWarning className={`antialiased`}>
-        <NavbarComp />
-        <main className="max-w-7xl mx-auto pt-24 md:pt-16 px-5">
+        {!noFooter.includes(pathname) && <NavbarComp />}
+        <main className="">
           {children}
         </main>
         {

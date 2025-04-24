@@ -9,7 +9,7 @@ const HomeHero = () => {
         <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold">
           WASTE WISE
         </h1>
-        <p className="text-lg text-center">
+        <p className="text-center">
           Making our communities clean and disease-free. Join millions of
           Ghanaians making our cities and towns a beautiful and safe place to
           live in.

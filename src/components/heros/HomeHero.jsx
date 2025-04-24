@@ -15,10 +15,10 @@ const HomeHero = () => {
           live in.
         </p>
         <div className="flex flex-col md:flex-row md:w-auto gap-3">
-          <button className="bg-green-600 text-white rounded-lg shadow-md px-3 p-3 w-80 md:w-52">
+          <button className="bg-green-600 text-white rounded-lg shadow-md px-3 p-3 w-52">
             Get A Bin
           </button>
-          <Link href="/bin-centres" className="flex justify-center border-2 border-green-600 text-green-500 rounded-lg shadow-md px-3 p-3 w-80 md:w-52">
+          <Link href="/bin-centres" className="flex justify-center border-2 border-green-600 text-green-500 rounded-lg shadow-md px-3 p-3 w-52">
            Explore Bin Centres
           </Link>
         </div>

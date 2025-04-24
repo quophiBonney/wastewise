@@ -9,11 +9,9 @@ export default function RootLayout({ children }) {
  const noFooter = ["/auth/signin", "/auth/signup", "/auth/admin"];
   return (
     <html lang="en">
-      <body suppressHydrationWarning className={`antialiased`}>
+      <body suppressHydrationWarning className={`bg-gray-100 antialiased`}>
         {!noFooter.includes(pathname) && <NavbarComp />}
-        <main className="">
-          {children}
-        </main>
+        <main className="">{children}</main>
         {
           // only render footer when current path *isn’t* in noFooter
           !noFooter.includes(pathname) && <Footer />

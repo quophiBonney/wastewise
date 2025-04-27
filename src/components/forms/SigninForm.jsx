@@ -7,7 +7,7 @@ const SigninForm = () => {
       <div className="flex flex-col justify-center items-center px-5 lg:px-16">
         <p className="hidden lg:flex flex-row items-center mb-6 w-full text-gray-600 font-semibold">
           <MdOutlineKeyboardArrowLeft size={25} />{" "}
-          <Link href="/">Go back to login page</Link>
+          <Link href="/auth/signup">Go back to signup page</Link>
         </p>
         <div className="w-full px-5 md:px-16 lg:px-0">
           <form className="space-y-3 md:space-y-5 w-full ">
@@ -41,7 +41,7 @@ const SigninForm = () => {
               <input
                 type="submit"
                 value="Login"
-                className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md cursor-pointer"
+                className="w-full p-3 bg-green-600 hover:bg-green-500 text-white rounded-md cursor-pointer"
               />
             </div>
           </form>
@@ -52,7 +52,7 @@ const SigninForm = () => {
           </div>
         </div>
       </div>
-      <div className="hidden signup-right-col-bg lg:flex flex-col justify-center items-center text-gray-300">
+      <div className="hidden bg-green-600 lg:flex flex-col justify-center items-center text-gray-300">
         <p>Welcome Back</p>
       </div>
     </section>

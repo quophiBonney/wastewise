@@ -5,9 +5,9 @@ const SignupForm = () => {
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-screen">
       <div className="flex flex-col justify-center items-center px-5 lg:px-16">
-        <p className="hidden lg:flex flex-row items-center mb-6 w-full text-gray-600 font-semibold">
+        <Link href="/auth/signup" className="hidden lg:flex flex-row items-center mb-6 w-full text-gray-600 font-semibold">
           <MdOutlineKeyboardArrowLeft size={25} /> Go back to login page
-        </p>
+        </Link>
         <div className="w-full px-5 md:px-16 lg:px-0">
           <form className="space-y-3 md:space-y-5 w-full ">
             <div className="text-gray-800 mt-5 lg:mb-10">
@@ -74,7 +74,7 @@ const SignupForm = () => {
               <input
                 type="submit"
                 value="Sign Up"
-                className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md cursor-pointer"
+                className="w-full p-3 bg-green-600 hover:bg-green-500 text-white rounded-md cursor-pointer"
               />
             </div>
           </form>
@@ -85,7 +85,7 @@ const SignupForm = () => {
           </div>
         </div>
       </div>
-      <div className="hidden signup-right-col-bg lg:flex flex-col justify-center items-center text-gray-300">
+      <div className="hidden bg-green-600 lg:flex flex-col justify-center items-center text-gray-300">
         <p>Complete your registration in a seamless way.</p>
       </div>
     </section>

@@ -26,14 +26,14 @@ const HomeHero = () => {
         </p>
         <div className="flex flex-col md:flex-row md:w-auto gap-3">
           <button
-            className="bg-green-600 text-white rounded-lg shadow-md px-3 p-3 w-52"
+            className="bg-green-600 text-white rounded-lg shadow-md px-3 p-3 w-52 hover:cursor-pointer hover:bg-green-500"
             onClick={() => setIsOpen(true)}
           >
             Get A Bin
           </button>
           <Link
             href="/bin-centres"
-            className="flex justify-center border-2 border-green-600 text-green-500 rounded-lg shadow-md px-3 p-3 w-52"
+            className="flex justify-center border-2 border-green-600 text-green-500 rounded-lg shadow-md px-3 p-3 w-52 hover:bg-green-500 hover:text-white"
           >
             Explore Bin Centres
           </Link>
@@ -44,10 +44,11 @@ const HomeHero = () => {
       </div>
       {isOpen && (
         <div
-          className="bg-gray-800/50 backdrop-blur-sm fixed inset-0 z-10 overflow-y-auto"
+          className="bg-gray-800/50 backdrop-blur-sm fixed inset-0 z-50 overflow-y-auto"
           aria-labelledby="modal-title"
           role="dialog"
           aria-modal="true"
+          onClick={() => setIsOpen(false)}
         >
           <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             <span
@@ -56,7 +57,7 @@ const HomeHero = () => {
             >
               &#8203;
             </span>
-            <div className="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900 sm:my-8 sm:w-full sm:max-w-sm md:max-w-lg lg:max-w-xl sm:p-6 sm:align-middle">
+            <div className="relative inline-block px-4 pt-10 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900 sm:my-8 sm:w-full sm:max-w-sm md:max-w-lg lg:max-w-xl sm:p-6 sm:align-middle">
               <h3
                 className="text-3xl font-bold text-gray-800 capitalize dark:text-white"
                 id="modal-title"
@@ -121,7 +122,7 @@ const HomeHero = () => {
                   </div>
                 </div>
                 <div>
-                  <select className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg">
+                  <select defaultValue="" className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg">
                     <option value="" disabled selected>
                       Select Family Size
                     </option>

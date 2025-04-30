@@ -43,7 +43,7 @@ const BinCentresHero = () => {
             defaultValue=""
           >
             <option value="" disabled>
-              {selectedRegion ? "Select town" : "Select a region first"}
+              {selectedRegion ? "Select city/town" : "Select a region first"}
             </option>
             {towns.map((town) => (
               <option key={town} value={town}>

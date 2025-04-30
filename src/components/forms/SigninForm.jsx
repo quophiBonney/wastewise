@@ -5,13 +5,13 @@ const SigninForm = () => {
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-screen">
       <div className="flex flex-col justify-center items-center px-5 lg:px-16">
-        <p className="hidden lg:flex flex-row items-center mb-6 w-full text-gray-600 font-semibold">
-          <MdOutlineKeyboardArrowLeft size={25} />{" "}
-          <Link href="/auth/signup">Go back to signup page</Link>
-        </p>
         <div className="w-full px-5 md:px-16 lg:px-0">
           <form className="space-y-3 md:space-y-5 w-full ">
             <div className="text-gray-800 mb-10">
+              <p className="hidden lg:flex flex-row items-center mb-6 w-full text-gray-600 font-semibold">
+                <MdOutlineKeyboardArrowLeft size={25} />{" "}
+                <Link href="/auth/signup">Go to signup page</Link>
+              </p>
               <h2 className="text-3xl font-bold ">Login</h2>
               <p>Enter your details to log into your account!</p>
             </div>
@@ -22,7 +22,7 @@ const SigninForm = () => {
                 id="email"
                 name="email"
                 placeholder="Enter your name"
-                className="w-full p-3 border border-gray-300 rounded-lg"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
                 required
               />
             </div>
@@ -33,7 +33,7 @@ const SigninForm = () => {
                 id="password"
                 name="password"
                 placeholder="Password"
-                className="w-full p-3 border border-gray-300 rounded-lg"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
                 required
               />
             </div>
@@ -53,7 +53,8 @@ const SigninForm = () => {
         </div>
       </div>
       <div className="hidden bg-green-600 lg:flex flex-col justify-center items-center text-gray-300">
-        <p>Welcome Back</p>
+        <p className="text-lg">Welcome Back</p>
+        <h3 className="text-5xl font-bold uppercase">WasteWise</h3>
       </div>
     </section>
   );

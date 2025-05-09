@@ -16,13 +16,14 @@ const BinRequestTable = () => {
 
   // Header with global search
   const header = (
-    <div className="flex justify-between items-center mb-2">
-      <h2 className="m-0">Bin Requests</h2>
-      <span className="p-input-icon-left">
-        <i className="pi pi-search" />
+    <div className="space-y-3 flex flex-col md:flex-row justify-between items-center mb-2">
+      <div className="w-full md:w-1/2">
+        <h2 className="m-0 text-xl font-bold">Bin Requests</h2>
+      </div>
+      <div className="w-full md:w-1/2">
         <input
           type="search"
-          className="rounded-lg bg-white p-3"
+          className="w-full rounded-lg bg-white p-3"
           onInput={(e) =>
             setFilters({
               ...filters,
@@ -31,7 +32,7 @@ const BinRequestTable = () => {
           }
           placeholder="Search by name, bin code..."
         />
-      </span>
+      </div>
     </div>
   );
 

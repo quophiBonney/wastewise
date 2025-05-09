@@ -1,12 +1,30 @@
-import React from "react";
+"use client"
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import Link from "next/link";
+import { loginUser } from "@/slice/authSlice";
 const SigninForm = () => {
+  const dispatch = useDispatch()
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  })
+
+  const handleInputChange = (e) => {
+    const {name, value} = e.target
+    setFormData((prevData) => ({...prevData, [name]: value}))
+  }
+  
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    dispatch(loginUser(formData))
+  }
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-screen">
       <div className="flex flex-col justify-center items-center px-5 lg:px-16">
         <div className="w-full px-5 md:px-16 lg:px-0">
-          <form className="space-y-3 md:space-y-5 w-full ">
+          <form className="space-y-3 md:space-y-5 w-full" onSubmit={handleSubmit}>
             <div className="text-gray-800 mb-10">
               <p className="hidden lg:flex flex-row items-center mb-6 w-full text-gray-600 font-semibold">
                 <MdOutlineKeyboardArrowLeft size={25} />{" "}
@@ -19,9 +37,10 @@ const SigninForm = () => {
               <label htmlFor="email">Email</label>
               <input
                 type="email"
-                id="email"
                 name="email"
-                placeholder="Enter your name"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Enter email address"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
                 required
               />
@@ -30,8 +49,9 @@ const SigninForm = () => {
               <label htmlFor="password">Password</label>
               <input
                 type="password"
-                id="password"
                 name="password"
+                value={formData.password}
+                onChange={handleInputChange}
                 placeholder="Password"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
                 required

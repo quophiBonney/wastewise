@@ -18,10 +18,9 @@ const SignupForm = () => {
     town: "",
     password: "",
     role: "user",
-    location: "", // you can store a string or object here
+    location: {lat: null, lng: null},
   });
 
-  // Derive the list of towns when a region is selected
   const towns = formData.region ? regions[formData.region] : [];
 
   // Unified change handler for all inputs/selects
@@ -39,11 +38,9 @@ const SignupForm = () => {
   // Form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Dispatch the signupUser thunk/action with the entire payload
     dispatch(signupUser(formData));
   };
 
-  // --- Geolocation logic (if you still want to capture coords) ---
   const [locationCoords, setLocationCoords] = useState({
     lat: null,
     lon: null,
@@ -52,16 +49,14 @@ const SignupForm = () => {
   const onGeoSuccess = (position) => {
     const { latitude: lat, longitude: lon } = position.coords;
     setLocationCoords({ lat, lon });
-    // Optionally store in formData.location:
     setFormData((prev) => ({
       ...prev,
-      location: `${lat},${lon}`,
+      location: { lat, lng: lon },
     }));
   };
 
   const onGeoError = (error) => {
     console.error("Geolocation error:", error);
-    // handle errors as you see fit
   };
 
   const requestUserLocation = () => {
@@ -77,7 +72,6 @@ const SignupForm = () => {
   useEffect(() => {
     requestUserLocation();
   }, []);
-  // --------------------------------------------------------------
 
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-screen">

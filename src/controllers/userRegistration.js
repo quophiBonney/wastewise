@@ -1,7 +1,7 @@
 // src/controllers/userRegistration.js
 import bcrypt from "bcryptjs";
 import UserModel from "@/models/Users";
-import registrationValidations from "@/validations/signupValidation";
+
 
 export const registerUser = async (req, res) => {
   if (req.method !== "POST") {
@@ -12,18 +12,19 @@ export const registerUser = async (req, res) => {
   // 2) Validate input
   let data;
   try {
-    data = registrationValidations.parse(req.body);
+    data = req.body;
   } catch (err) {
     return res.status(400).json({ error: "Invalid input", details: err.errors });
   }
 
-  const { fullName, email, role, phone, password, region, town, location } = data;
+  const { fullName, email, role, password, region, town, location } = data;
 
   try {
-    // 3) Check duplicates
+    if(!location) {
+      return res.status(409).json({message: "Allow location"})
+    }
     const [byEmail, byPhone] = await Promise.all([
-      UserModel.findOne({ email }),
-      UserModel.findOne({ phone }),
+      UserModel.findOne({ email })
     ]);
     if (byEmail || byPhone) {
       return res.status(409).json({ error: "User with those credentials already exists" });
@@ -33,11 +34,10 @@ export const registerUser = async (req, res) => {
       fullName,
       email,
       role,
-      phone,
       password: hashedPassword,
       region,
       town,
-      location
+      location: { lat: location.lat, lng: location.lng },
     });
 
     return res.status(201).json({

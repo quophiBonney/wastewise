@@ -23,6 +23,7 @@
     "mongoose": "^8.14.0",
     "next": "15.3.1",
     "nodemailer": "^6.10.1",
+    "primereact": "^10.9.5",
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",
     "react-dom": "^19.0.0",

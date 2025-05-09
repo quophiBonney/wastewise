@@ -5,6 +5,7 @@ import Sidebar from '@/components/dashboard/Sidebar'
 //dashboard pages
 import LandingPage from './LandingPage/LandingPage'
 import {useState} from 'react'
+import BinRequests from './bin requests/page'
 
 const page = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -15,6 +16,8 @@ const page = () => {
      switch (selected) {
        case "dashboard":
          return <LandingPage />;
+        case "bin requests":
+          return <BinRequests />;
      }
    };
   return (
@@ -30,7 +33,7 @@ const page = () => {
         className={`
             flex-1 flex flex-col
             transition-all duration-300
-            ${isOpen ? "lg:ml-64" : "lg:ml-20"}
+            ${isOpen ? "lg:ml-52" : "lg:ml-20"}
           `}
       >
           <AppBar toggleSidebar={toggle} />

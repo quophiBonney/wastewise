@@ -8,9 +8,9 @@ const NavbarComp = () => {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "bin/centres", label: "Bin Centres" },
-    { href: "about", label: "About" },
-    { href: "report", label: "Report An Issue" },
+    { href: "/bin/centres", label: "Bin Centres" },
+    { href: "/about", label: "About" },
+    { href: "/report", label: "Report An Issue" },
   ];
 
   return (

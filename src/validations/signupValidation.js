@@ -1,13 +1,15 @@
-const z = require('zod')
+import z from 'zod'
 
-const registrationValidations = z.object({
+export const registrationValidations = z.object({
   fullName: z.string(),
   email: z.string().email(),
-  phone: z.string().regex(/^\+\d{10,15}$/),
   role: z.enum(["user", "driver", "admin"]),
   password: z.string().min(8),
   region: z.string(),
   town: z.string(),
+  location: z.object({
+    lat: z.number(),
+    lng: z.number(),
+  }),
 });
 
-module.exports = registrationValidations

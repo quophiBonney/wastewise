@@ -3,20 +3,42 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
-    fullName: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
-    phone: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    fullName: { 
+      type: String, 
+      required: true 
+    },
+    email: { 
+      type: String, 
+      required: true, 
+      unique: true, 
+      lowercase: true 
+    },
+    password: { 
+      type: String, 
+      required: true 
+    },
     role: {
       type: String,
-      enum: ["admin", "member", "user"],
+      enum: ["admin", "supervisor", "driver", "user"],
       default: "user",
     },
-    region: { type: String, required: true },
-    town: { type: String, required: true },
+    region: { 
+      type: String, 
+      required: true 
+    },
+    town: { 
+      type: String, 
+      required: true 
+    },
     location: {
-      lat: { type: Number, required: true },
-      lng: { type: Number, required: true },
+      lat: { 
+        type: Number, 
+        required: true 
+      },
+      lng: { 
+        type: Number, 
+        required: true 
+      },
     },
   },
   { timestamps: true }

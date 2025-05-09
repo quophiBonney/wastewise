@@ -6,12 +6,11 @@ export const signupUser = createAsyncThunk(
   "auth/signup",
   async (userData, thunkAPI) => {
     const response = await axios.post("/api/auth/signup", userData);
-    // assume response.data contains { token, user }
     return response.data;
   }
 );
 export const loginUser = createAsyncThunk(
-  "auth/login",
+  "/api/auth/login",
   async (credentials, thunkAPI) => {
     const response = await axios.post("/api/login", credentials);
     return response.data;

@@ -32,7 +32,7 @@ const HomeHero = () => {
             Get A Bin
           </button>
           <Link
-            href="/bin-centres"
+            href="/bin/centres"
             className="flex justify-center border-2 border-green-600 text-green-500 rounded-lg shadow-md px-3 p-3 w-52 hover:bg-green-500 hover:text-white"
           >
             Explore Bin Centres

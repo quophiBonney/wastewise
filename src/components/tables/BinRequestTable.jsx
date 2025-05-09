@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { InputText } from "primereact/inputtext";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 
@@ -15,13 +16,13 @@ const BinRequestTable = () => {
 
   // Header with global search
   const header = (
-    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 px-2 sm:px-0">
-      <h2 className="text-xl font-semibold m-0">Bin Requests</h2>
-      <span className="p-input-icon-left w-full sm:w-auto">
+    <div className="flex justify-between items-center mb-2">
+      <h2 className="m-0">Bin Requests</h2>
+      <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <input
           type="search"
-          className="rounded-lg bg-white p-2 sm:p-3 w-full sm:w-64"
+          className="rounded-lg bg-white p-3"
           onInput={(e) =>
             setFilters({
               ...filters,
@@ -36,9 +37,141 @@ const BinRequestTable = () => {
 
   useEffect(() => {
     setLoading(true);
+    // Simulate fetch
     setTimeout(() => {
       setCustomers([
-        // ... your mock data ...
+        {
+          id: 1,
+          name: "John Doe",
+          binCode: "20345",
+          houseAddress: "203 Main St",
+          region: "Greater Accra",
+          town: "Accra",
+          houseHoldSize: 4,
+          contact: "0201234567",
+          status: "Pending",
+        },
+        {
+          id: 2,
+          name: "Quophi Bonney",
+          binCode: "22345",
+          houseAddress: "45 Asafo St",
+          region: "Oti Region",
+          town: "Jasikan",
+          houseHoldSize: 10,
+          contact: "0209876543",
+          status: "Approved",
+        },
+        {
+          id: 3,
+          name: "John Doe",
+          binCode: "20345",
+          houseAddress: "203 Main St",
+          region: "Greater Accra",
+          town: "Accra",
+          houseHoldSize: 4,
+          contact: "0201234567",
+          status: "Pending",
+        },
+        {
+          id: 4,
+          name: "Quophi Bonney",
+          binCode: "22345",
+          houseAddress: "45 Asafo St",
+          region: "Oti Region",
+          town: "Jasikan",
+          houseHoldSize: 10,
+          contact: "0209876543",
+          status: "Approved",
+        },
+        {
+          id: 5,
+          name: "John Doe",
+          binCode: "20345",
+          houseAddress: "203 Main St",
+          region: "Greater Accra",
+          town: "Accra",
+          houseHoldSize: 4,
+          contact: "0201234567",
+          status: "Pending",
+        },
+        {
+          id: 6,
+          name: "Quophi Bonney",
+          binCode: "22345",
+          houseAddress: "45 Asafo St",
+          region: "Oti Region",
+          town: "Jasikan",
+          houseHoldSize: 10,
+          contact: "0209876543",
+          status: "Approved",
+        },
+        {
+          id: 7,
+          name: "John Doe",
+          binCode: "20345",
+          houseAddress: "203 Main St",
+          region: "Greater Accra",
+          town: "Accra",
+          houseHoldSize: 4,
+          contact: "0201234567",
+          status: "Pending",
+        },
+        {
+          id: 8,
+          name: "Quophi Bonney",
+          binCode: "22345",
+          houseAddress: "45 Asafo St",
+          region: "Oti Region",
+          town: "Jasikan",
+          houseHoldSize: 10,
+          contact: "0209876543",
+          status: "Approved",
+        },
+        {
+          id: 9,
+          name: "John Doe",
+          binCode: "20345",
+          houseAddress: "203 Main St",
+          region: "Greater Accra",
+          town: "Accra",
+          houseHoldSize: 4,
+          contact: "0201234567",
+          status: "Pending",
+        },
+        {
+          id: 10,
+          name: "Quophi Bonney",
+          binCode: "22345",
+          houseAddress: "45 Asafo St",
+          region: "Oti Region",
+          town: "Jasikan",
+          houseHoldSize: 10,
+          contact: "0209876543",
+          status: "Approved",
+        },
+        {
+          id: 11,
+          name: "John Doe",
+          binCode: "20345",
+          houseAddress: "203 Main St",
+          region: "Greater Accra",
+          town: "Accra",
+          houseHoldSize: 4,
+          contact: "0201234567",
+          status: "Pending",
+        },
+        {
+          id: 12,
+          name: "Quophi Bonney",
+          binCode: "22345",
+          houseAddress: "45 Asafo St",
+          region: "Oti Region",
+          town: "Jasikan",
+          houseHoldSize: 10,
+          contact: "0209876543",
+          status: "Approved",
+        },
       ]);
       setLoading(false);
     }, 1000);
@@ -47,7 +180,6 @@ const BinRequestTable = () => {
   return (
     <div className="card">
       {header}
-
       <DataTable
         ref={dt}
         value={customers}
@@ -59,7 +191,6 @@ const BinRequestTable = () => {
         globalFilterFields={["name", "region", "binCode", "town", "status"]}
         emptyMessage="No bin request found."
         className="p-datatable-striped"
-        responsiveLayout="scroll"
       >
         <Column
           field="name"
@@ -89,7 +220,7 @@ const BinRequestTable = () => {
         <Column
           field="houseHoldSize"
           header="Household Size"
-          style={{ minWidth: "130px", padding: "0.75rem" }}
+          style={{ minWidth: "150px", padding: "0.75rem" }}
         />
         <Column
           field="contact"

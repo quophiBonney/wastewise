@@ -35,3 +35,17 @@ export const reportController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error." });
   }
 };
+
+export const fetchReports = async (req, res) => {
+  if (req.method !== "GET") {
+    res.setHeader("Allow", ["GET"]);
+    return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
+  }
+  try {
+    const reports = await reportModel.find();
+    return res.status(200).json(reports);
+  } catch (err) {
+    console.error("Report fetch error:", err);
+    return res.status(500).json({ error: "Internal server error." });
+  }
+}

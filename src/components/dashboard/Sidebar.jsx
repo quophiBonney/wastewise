@@ -43,7 +43,7 @@ const Sidebar = ({ isOpen, selected, onSelect }) => {
                 ${selected === key ? "bg-gray-200 rounded-lg" : ""}
               `}
             >
-              <MdDashboardCustomize size={20} className="text-gray-500"/>
+              <MdDashboardCustomize size={20} className="text-gray-500" />
               {isOpen && <span className="ml-3">{label}</span>}
             </li>
           ))}

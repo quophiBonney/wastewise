@@ -6,7 +6,7 @@ import axios from "axios";
 export const sendReport = createAsyncThunk(
   "reports/send",
   async (reportData, thunkAPI) => {
-    const response = await axios.post("/api/report", reportData);
+    const response = await axios.post("/api/reports/add-report", reportData);
     // Expect the created report back
     return response.data;
   }
@@ -16,7 +16,7 @@ export const sendReport = createAsyncThunk(
 export const fetchReports = createAsyncThunk(
   "reports/fetchAll",
   async (_, thunkAPI) => {
-    const response = await axios.get("/api/report/all");
+    const response = await axios.get("/api/reports/all-reports");
     // Expect an array of reports
     return response.data;
   }
@@ -26,7 +26,7 @@ export const fetchReports = createAsyncThunk(
 export const updateReport = createAsyncThunk(
   "reports/update",
   async ({ id, ...fields }, thunkAPI) => {
-    const response = await axios.put(`/api/report/${id}`, fields);
+    const response = await axios.put(`/api/reports/update-report/${id}`, fields);
     // Expect the updated report
     return response.data;
   }
@@ -36,7 +36,7 @@ export const updateReport = createAsyncThunk(
 export const deleteReport = createAsyncThunk(
   "reports/delete",
   async (id, thunkAPI) => {
-    await axios.delete(`/api/report/${id}`);
+    await axios.delete(`/api/report/delete-report/${id}`);
     // Return the id so we can remove it locally
     return id;
   }

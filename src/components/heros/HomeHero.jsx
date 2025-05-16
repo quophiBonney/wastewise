@@ -1,18 +1,58 @@
 "use client"
-import  { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { requestBin } from "@/slice/requestBinSlice";
 import bin from "@/assets/images/bin-illustration.png";
 import Image from "next/image";
 import Link from "next/link";
 import regions from "@/app/utils/cities.json";
+
 const HomeHero = () => {
+  const dispatch = useDispatch();
+  const { status, error } = useSelector((state) => state.request);
+
   const [isOpen, setIsOpen] = useState(false);
   const info = Object.entries(regions).map(([regionName, cities]) => ({
-      name: regionName,
-      cityCount: cities.length,
-    }));
-  
-    const [selectedRegion, setSelectedRegion] = useState("");
-    const towns = selectedRegion ? regions[selectedRegion] : [];
+    name: regionName,
+    cityCount: cities.length,
+  }));
+
+  const [selectedRegion, setSelectedRegion] = useState("");
+  const towns = selectedRegion ? regions[selectedRegion] : [];
+
+  // Form state
+  const [houseAddress, setHouseAddress] = useState("");
+  const [contact, setcontact] = useState("");
+  const [selectedTown, setSelectedTown] = useState("");
+  const [houseHoldSize, sethouseHoldSize] = useState("");
+
+  // Close modal on successful submission
+  useEffect(() => {
+    if (status === "succeeded") {
+      setIsOpen(false);
+      // Reset form fields
+      setHouseAddress("");
+      setcontact("");
+      setSelectedRegion("");
+      setSelectedTown("");
+      sethouseHoldSize("");
+    }
+  }, [status]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Dispatch requestBin thunk with form data
+    dispatch(
+      requestBin({
+        houseAddress,
+        contact,
+        region: selectedRegion,
+        town: selectedTown,
+        houseHoldSize,
+      })
+    );
+  };
+
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="flex flex-col justify-center items-center space-y-6 md:space-y-4">
@@ -57,7 +97,10 @@ const HomeHero = () => {
             >
               &#8203;
             </span>
-            <div className="relative inline-block px-4 pt-10 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900 sm:my-8 sm:w-full sm:max-w-sm md:max-w-lg lg:max-w-xl sm:p-6 sm:align-middle">
+            <div
+              className="relative inline-block px-4 pt-10 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900 sm:my-8 sm:w-full sm:max-w-sm md:max-w-lg lg:max-w-xl sm:p-6 sm:align-middle"
+              onClick={(e) => e.stopPropagation()}
+            >
               <h3
                 className="text-3xl font-bold text-gray-800 capitalize dark:text-white"
                 id="modal-title"
@@ -69,20 +112,28 @@ const HomeHero = () => {
                 bin for your household.
               </p>
 
-              <form className="mt-4 space-y-3" action="#">
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Hse No."
-                    className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
-                  />
+              <form className="mt-4 space-y-3" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Hse Address"
+                      className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
+                      value={houseAddress}
+                      onChange={(e) => setHouseAddress(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Phone Number"
+                      className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
+                      value={contact}
+                      onChange={(e) => setcontact(e.target.value)}
+                      required
+                    />
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
@@ -90,6 +141,7 @@ const HomeHero = () => {
                       className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
                       value={selectedRegion}
                       onChange={(e) => setSelectedRegion(e.target.value)}
+                      required
                     >
                       <option value="" disabled>
                         Select region
@@ -106,7 +158,9 @@ const HomeHero = () => {
                       id="town"
                       className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
                       disabled={!selectedRegion}
-                      defaultValue=""
+                      value={selectedTown}
+                      onChange={(e) => setSelectedTown(e.target.value)}
+                      required
                     >
                       <option value="" disabled>
                         {selectedRegion
@@ -122,16 +176,27 @@ const HomeHero = () => {
                   </div>
                 </div>
                 <div>
-                  <select defaultValue="" className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg">
-                    <option value="" disabled selected>
-                      Select Family Size
+                  <select
+                    value={houseHoldSize}
+                    onChange={(e) => sethouseHoldSize(e.target.value)}
+                    required
+                    className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
+                  >
+                    <option value="" disabled>
+                      Select Household Size
                     </option>
-                    <option value="">1-5</option>
-                    <option value="">5-10</option>
-                    <option value="">10-15</option>
-                    <option value="">15-20</option>
+                    <option value="1-5">1-5</option>
+                    <option value="5-10">5-10</option>
+                    <option value="10-15">10-15</option>
+                    <option value="15-20">15-20</option>
                   </select>
                 </div>
+                {status === "loading" && (
+                  <p className="text-blue-600 text-center">Sending request...</p>
+                )}
+                {status === "failed" && (
+                  <p className="text-red-600 text-center">Error: {error}</p>
+                )}
                 <div className="mt-4 sm:flex sm:items-center sm:-mx-2">
                   <button
                     type="button"
@@ -140,12 +205,13 @@ const HomeHero = () => {
                   >
                     Cancel
                   </button>
-
-                  <input
-                    type="button"
-                    value="Register"
-                    className="w-full px-4 p-3 mt-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-md sm:mt-0 sm:w-1/2 sm:mx-2 hover:bg-green-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
-                  />
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="w-full px-4 p-3 mt-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-md sm:mt-0 sm:w-1/2 sm:mx-2 hover:bg-green-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Send Request
+                  </button>
                 </div>
               </form>
             </div>

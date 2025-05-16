@@ -1,25 +1,24 @@
 "use client"
 import AppBar from '@/components/dashboard/AppBar'
 import Sidebar from '@/components/dashboard/Sidebar'
-
-//dashboard pages
 import LandingPage from './LandingPage/LandingPage'
-import {useState} from 'react'
+import { useState } from 'react'
 import BinRequests from './bin requests/page'
+
 
 const page = () => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen((o) => !o);
   const [selected, setSelected] = useState("dashboard");
 
-   const renderContent = () => {
-     switch (selected) {
-       case "dashboard":
-         return <LandingPage />;
-        case "bin requests":
-          return <BinRequests />;
-     }
-   };
+  const renderContent = () => {
+    switch (selected) {
+      case "dashboard":
+        return <LandingPage />;
+      case "bin requests":
+        return <BinRequests />;
+    }
+  };
   return (
     <>
       <Sidebar isOpen={isOpen} selected={selected} onSelect={setSelected} />
@@ -36,11 +35,10 @@ const page = () => {
             ${isOpen ? "lg:ml-52" : "lg:ml-20"}
           `}
       >
-          <AppBar toggleSidebar={toggle} />
-          <main className="bg-gray-100 px-5 pt-6 h-full"> {renderContent()}</main>
+        <AppBar toggleSidebar={toggle} />
+        <main className="bg-gray-100 px-5 pt-6 h-full"> {renderContent()}</main>
       </div>
     </>
   );
 };
-
-export default page
+export default page;

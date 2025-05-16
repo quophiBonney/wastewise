@@ -1,19 +1,23 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import {toast} from 'react-hot-toast'
+import { useState, useEffect} from "react";
+import { useRouter } from "next/navigation";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import Link from "next/link";
 import regions from "@/app/utils/cities.json";
 import { signupUser } from "@/slice/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const SignupForm = () => {
+  const router = useRouter();
+const { status, error, user, message } = useSelector((state) => state.auth);
+
+
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    phone: "",
     region: "",
     town: "",
     password: "",
@@ -23,13 +27,11 @@ const SignupForm = () => {
 
   const towns = formData.region ? regions[formData.region] : [];
 
-  // Unified change handler for all inputs/selects
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
-      // if the region changed, reset town to empty
       ...(name === "region" ? { town: "" } : {}),
       [name]: value,
     }));
@@ -38,7 +40,28 @@ const SignupForm = () => {
   // Form submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    const requiredFields = [
+      "fullName",
+      "email",
+      "region",
+      "town",
+      "password",
+    ];
+    const emptyFields = requiredFields.filter((field) => !formData[field]);
+
+    if (emptyFields.length > 0) {
+      // emptyFields.forEach((field) => {
+      //   // toast.error(
+      //   //   `${field.charAt(0).toUpperCase() + field.slice(1)} is required`
+      //   // );
+      //   toast.error("All fields are required")
+      // });
+      toast.error("All fields are required");
+      return;
+    }
+
     dispatch(signupUser(formData));
+  
   };
 
   const [locationCoords, setLocationCoords] = useState({
@@ -69,9 +92,30 @@ const SignupForm = () => {
     }
   };
 
-  useEffect(() => {
-    requestUserLocation();
-  }, []);
+useEffect(() => {
+  if (status === "succeeded") {
+    toast.success(user?.fullName ? `Welcome, ${user.fullName}!` : message);
+    router.push("/auth/signin"); 
+  }
+
+  if (status === "failed" && error) {
+    // Handle field-specific errors first
+    if (error.fieldErrors) {
+      Object.entries(error.fieldErrors).forEach(([field, messages]) => {
+        messages.forEach((msg) => {
+          toast.error(
+            `${field.charAt(0).toUpperCase() + field.slice(1)}: ${msg}`
+          );
+        });
+      });
+    } else {
+      // General error message
+      toast.error(error);
+    }
+  }
+   requestUserLocation();
+}, [status, error, user, message]);
+
 
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-screen">
@@ -92,7 +136,6 @@ const SignupForm = () => {
               <h2 className="mt-3 text-3xl font-bold">Register</h2>
               <p>Enter your details to complete your registration!</p>
             </div>
-
             {/* Name + Email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -105,7 +148,6 @@ const SignupForm = () => {
                   onChange={handleInputChange}
                   placeholder="Enter your name"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-                  required
                 />
               </div>
               <div>
@@ -118,26 +160,9 @@ const SignupForm = () => {
                   onChange={handleInputChange}
                   placeholder="Enter email address"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-                  required
                 />
               </div>
             </div>
-
-            {/* Phone */}
-            <div>
-              <label htmlFor="phone">Phone</label>
-              <input
-                type="text"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                placeholder="+2332XXXXXXXX"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-                required
-              />
-            </div>
-
             {/* Region + Town */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -148,7 +173,6 @@ const SignupForm = () => {
                   value={formData.region}
                   onChange={handleInputChange}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-                  required
                 >
                   <option value="" disabled>
                     Select region
@@ -169,7 +193,6 @@ const SignupForm = () => {
                   onChange={handleInputChange}
                   disabled={!formData.region}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-                  required
                 >
                   <option value="" disabled>
                     {formData.region
@@ -196,7 +219,6 @@ const SignupForm = () => {
                 onChange={handleInputChange}
                 placeholder="Password"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-                required
               />
             </div>
 

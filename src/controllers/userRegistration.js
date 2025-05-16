@@ -18,34 +18,38 @@ export const registerUser = async (req, res) => {
   }
 
   const { fullName, email, role, password, region, town, location } = data;
-
-  try {
-    if(!location) {
-      return res.status(409).json({message: "Allow location"})
-    }
-    const [byEmail, byPhone] = await Promise.all([
-      UserModel.findOne({ email })
-    ]);
-    if (byEmail || byPhone) {
-      return res.status(409).json({ error: "User with those credentials already exists" });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await UserModel.create({
-      fullName,
-      email,
-      role,
-      password: hashedPassword,
-      region,
-      town,
-      location: { lat: location.lat, lng: location.lng },
-    });
-
-    return res.status(201).json({
-      message: "Registration successful",
-      user: { id: newUser._id, fullName, email, role },
-    });
-  } catch (error) {
-    console.error("Registration error:", error);
-    return res.status(500).json({ error: "Server error" });
+try {
+  if (!location) {
+    return res.status(409).json({ message: "Location permission required" });
   }
+
+  const [byEmail] = await Promise.all([UserModel.findOne({ email })]);
+  if (byEmail) {
+    return res.status(409).json({
+      message: "User already exists",
+      fieldErrors: { email: ["Email is already registered"] },
+    });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = await UserModel.create({
+    fullName,
+    email,
+    role,
+    password: hashedPassword,
+    region,
+    town,
+    location: { lat: location.lat, lng: location.lng },
+  });
+
+  return res.status(201).json({
+    message: "Registration successful",
+    user: { id: newUser._id, fullName, email, role },
+  });
+} catch (error) {
+  console.error("Registration error:", error);
+  return res
+    .status(500)
+    .json({ message: "Server error", details: error.message });
+}
 };

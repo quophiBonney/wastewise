@@ -2,29 +2,29 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Async Thunks
-export const requestBin = createAsyncThunk(
-  "request/new",
-  async (requestData) => {
-    const response = await axios.post("/api/bins/request/add-request", requestData);
+export const createBinOffice = createAsyncThunk(
+  "bin/office",
+  async (officeData) => {
+    const response = await axios.post("/api/bins", officeData);
     return response.data;
   }
 );
 
-export const fetchBinRequests = createAsyncThunk("request/fetchAll", async () => {
-  const response = await axios.get("/api/bins/request/all-requests");
+export const fetchBinOffices = createAsyncThunk("bins/fetchAll", async () => {
+  const response = await axios.get("/api/bins/get-office");
   return response.data;
 });
 
-export const updateBinRequest = createAsyncThunk(
-  "request/update",
+export const updateBinOffice = createAsyncThunk(
+  "bins/update",
   async ({ id, ...fields }) => {
-    const response = await axios.put(`/api/bins/request/update-request/${id}`, fields);
+    const response = await axios.put(`/api/bins/update-office/${id}`, fields);
     return response.data;
   }
 );
 
-export const deleteBinRequest = createAsyncThunk("request/delete", async (id) => {
-  await axios.delete(`/api/bins/request/delete-request/${id}`);
+export const deleteBinOffice = createAsyncThunk("request/delete", async (id) => {
+  await axios.delete(`/api/bins/delete-office/${id}`);
   return id;
 });
 
@@ -43,27 +43,27 @@ const requestSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Fetch Requests
-      .addCase(fetchBinRequests.pending, (state) => {
+      .addCase(fetchBinOffices.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
-      .addCase(fetchBinRequests.fulfilled, (state, action) => {
+      .addCase(fetchBinOffices.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.items = action.payload;
       })
-      .addCase(fetchBinRequests.rejected, (state, action) => {
+      .addCase(fetchBinOffices.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
 
       // Update Request
-      .addCase(updateBinRequest.fulfilled, (state, action) => {
+      .addCase(updateBinOffice.fulfilled, (state, action) => {
         const idx = state.items.findIndex((r) => r._id === action.payload._id);
         if (idx !== -1) state.items[idx] = action.payload;
       })
 
       // Delete Request
-      .addCase(deleteBinRequest.fulfilled, (state, action) => {
+      .addCase(deleteBinOffice.fulfilled, (state, action) => {
         state.items = state.items.filter((r) => r._id !== action.payload);
       });
   },

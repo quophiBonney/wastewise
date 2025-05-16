@@ -1,16 +1,21 @@
 "use client"
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import Link from "next/link";
 import { loginUser } from "@/slice/authSlice";
+import {toast} from "react-hot-toast";
 const SigninForm = () => {
-  const dispatch = useDispatch()
-  const [formData, setFormData] = useState({
+
+ const router = useRouter();
+const { status, error, user, message } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+const [formData, setFormData] = useState({
     email: "",
     password: ""
   })
-
   const handleInputChange = (e) => {
     const {name, value} = e.target
     setFormData((prevData) => ({...prevData, [name]: value}))
@@ -18,8 +23,19 @@ const SigninForm = () => {
   
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(loginUser(formData))
-  }
+   if (!formData.email || !formData.password) {
+      toast.error("All fields are required");
+      return;
+    }
+  dispatch(loginUser(formData));
+}
+ useEffect(() => {
+   if (status === "succeeded") {
+     toast.success(message);
+   } else if (status === "failed") {
+     toast.error(message);
+   }
+ }, [status, message, router]);
   return (
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-screen">
       <div className="flex flex-col justify-center items-center px-5 lg:px-16">
@@ -42,7 +58,7 @@ const SigninForm = () => {
                 onChange={handleInputChange}
                 placeholder="Enter email address"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-                required
+              
               />
             </div>
             <div className="">
@@ -54,7 +70,7 @@ const SigninForm = () => {
                 onChange={handleInputChange}
                 placeholder="Password"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-                required
+              
               />
             </div>
             <div>

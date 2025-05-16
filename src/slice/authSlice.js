@@ -5,17 +5,35 @@ import axios from "axios";
 export const signupUser = createAsyncThunk(
   "auth/signup",
   async (userData, thunkAPI) => {
-    const response = await axios.post("/api/auth/signup", userData);
-    return response.data;
+    try {
+      const response = await axios.post("/api/auth/signup", userData);
+      return response.data;
+    } catch (error) {
+      const resp = error.response?.data || {};
+      const message = resp.message || error.message || "Signup failed";
+      const fieldErrors = resp.errors || null;
+      return thunkAPI.rejectWithValue({ message, fieldErrors });
+    }
   }
 );
+// slice/authSlice.js
+
 export const loginUser = createAsyncThunk(
-  "/api/auth/login",
+  "auth/login",                        // make sure the action type matches your slice
   async (credentials, thunkAPI) => {
-    const response = await axios.post("/api/login", credentials);
-    return response.data;
+    try {
+      const response = await axios.post("/api/auth/login", credentials);
+      return response.data;            // should include { token, user, message }
+    } catch (error) {
+      // pull out a clean message from the server if it exists
+      const resp = error.response?.data || {};
+      const message = resp.message || "Login failed";
+      // rejectWithValue so we can access `action.payload` in extraReducers
+      return thunkAPI.rejectWithValue(message);
+    }
   }
 );
+
 export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, thunkAPI) => {
@@ -28,6 +46,7 @@ const initialState = {
   token: null,
   status: "idle",
   error: null,
+  message: null,
 };
 
 const authSlice = createSlice({
@@ -36,31 +55,37 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(signupUser.pending, (state) => {
+ .addCase(signupUser.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    })
+    .addCase(signupUser.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.token = action.payload.token;
+      state.user = action.payload.user;
+      state.message = action.payload.message || "Signup successful!";
+    })
+    .addCase(signupUser.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload?.message || "Signup failed";
+      state.fieldErrors = action.payload?.fieldErrors || null;
+    })
+     .addCase(loginUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
-      })
-      .addCase(signupUser.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.token = action.payload.token;
-        state.user = action.payload.user;
-      })
-      .addCase(signupUser.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(loginUser.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
+        state.message = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.token = action.payload.token;
         state.user = action.payload.user;
+        // back-end should return a nice message here
+        state.message = action.payload.message || "Login successful";
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = null;                      // we won’t toast this
+        state.message = action.payload || action.error.message;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.status = "idle";

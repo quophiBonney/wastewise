@@ -4,6 +4,7 @@ import Sidebar from '@/components/dashboard/Sidebar'
 import LandingPage from './LandingPage/LandingPage'
 import { useState } from 'react'
 import BinRequests from './bin requests/page'
+import PickupCentres from './pickup centres/PickupCentres'
 
 
 const page = () => {
@@ -17,6 +18,8 @@ const page = () => {
         return <LandingPage />;
       case "bin requests":
         return <BinRequests />;
+      case "pickup centres":
+        return <PickupCentres/>
     }
   };
   return (

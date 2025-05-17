@@ -58,8 +58,8 @@ const initialState = {
 };
 
 // Slice Definition
-const requestSlice = createSlice({
-  name: "request",
+const pickupsSlice = createSlice({
+  name: "pickups",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -116,4 +116,4 @@ const requestSlice = createSlice({
   },
 });
 
-export default requestSlice.reducer;
+export default pickupsSlice.reducer;

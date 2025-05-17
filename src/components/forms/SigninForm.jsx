@@ -32,6 +32,7 @@ const [formData, setFormData] = useState({
  useEffect(() => {
    if (status === "succeeded") {
      toast.success(message);
+     router.push('/auth/admin')
    } else if (status === "failed") {
      toast.error(message);
    }

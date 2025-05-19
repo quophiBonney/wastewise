@@ -16,6 +16,20 @@ export const signupUser = createAsyncThunk(
     }
   }
 );
+
+export const getDrivers = createAsyncThunk( 
+  "auth/getDrivers",
+  async (userId, thunkAPI) => {
+    try {
+      const response = await axios.get(`/api/auth/drivers`);
+      return response.data;
+    } catch (error) {
+      const resp = error.response?.data || {};
+      const message = resp.message || error.message || "Failed to fetch drivers";
+      return thunkAPI.rejectWithValue({ message });
+    }
+  }
+);
 // slice/authSlice.js
 
 export const loginUser = createAsyncThunk(
@@ -55,22 +69,22 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
- .addCase(signupUser.pending, (state) => {
-      state.status = "loading";
-      state.error = null;
-    })
-    .addCase(signupUser.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      state.token = action.payload.token;
-      state.user = action.payload.user;
-      state.message = action.payload.message || "Signup successful!";
-    })
-    .addCase(signupUser.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.payload?.message || "Signup failed";
-      state.fieldErrors = action.payload?.fieldErrors || null;
-    })
-     .addCase(loginUser.pending, (state) => {
+      .addCase(signupUser.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+        state.message = action.payload.message || "Signup successful!";
+      })
+      .addCase(signupUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload?.message || "Signup failed";
+        state.fieldErrors = action.payload?.fieldErrors || null;
+      })
+      .addCase(loginUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
         state.message = null;
@@ -84,13 +98,25 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = null;                      // we won’t toast this
+        state.error = null; // we won’t toast this
         state.message = action.payload || action.error.message;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.status = "idle";
         state.token = null;
         state.user = null;
+      })
+      .addCase(getDrivers.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getDrivers.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.items = action.payload;
+      })
+      .addCase(getDrivers.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message
       });
   },
 });

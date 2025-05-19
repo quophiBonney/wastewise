@@ -53,3 +53,31 @@ try {
     .json({ message: "Server error", details: error.message });
 }
 };
+export const fetchUsers = async (req, res) => {
+  if (req.method !== "GET") {
+    res.setHeader("Allow", ["GET"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+
+  try {
+    const users = await UserModel.find();
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+}
+export const getDrivers = async (req, res) => {
+  if (req.method !== "GET") {
+    res.setHeader("Allow", ["GET"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+
+  try {
+    const drivers = await UserModel.find({ role: "driver" });
+    return res.status(200).json(drivers);
+  } catch (error) {
+    console.error("Error fetching drivers:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+} 

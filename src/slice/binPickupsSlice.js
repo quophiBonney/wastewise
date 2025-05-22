@@ -112,6 +112,10 @@ const pickupsSlice = createSlice({
       // Delete Request
       .addCase(deleteBinPickupCentre.fulfilled, (state, action) => {
         state.items = state.items.filter((r) => r._id !== action.payload);
+      })
+      // Create Pickup Centre
+      .addCase(createBinPickupCentre.fulfilled, (state, action) => {
+        state.items.push(action.payload.request);
       });
   },
 });

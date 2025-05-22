@@ -20,17 +20,17 @@ import { toast } from "react-hot-toast";
 const BinPickupCentresTable = () => {
   const dispatch = useDispatch();
   const {
-    items: centres,
+    items: centres = [],
     message,
     status: centresStatus,
     error: centresError,
   } = useSelector((state) => state.pickups);
   // Map drivers from auth slice
   const {
-    items: drivers,
+    items: drivers = [],
     status: driversStatus,
     error: driversError,
-  } = useSelector((state) => state.drivers);
+  } = useSelector((state) => state.auth);
 
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: "contains" },
@@ -73,6 +73,7 @@ const BinPickupCentresTable = () => {
     if (driversStatus === "failed") toast.error(driversError);
   }, [centresStatus, message, centresError, driversStatus, driversError]);
 
+  // Handle form inputs
   const onInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -82,14 +83,20 @@ const BinPickupCentresTable = () => {
     }));
   };
 
+  // Add new centre
   const handleAdd = (e) => {
     e.preventDefault();
     const required = ["name", "driver", "region", "town", "lat", "lon"];
     const missing = required.filter((f) => !formData[f]);
     if (missing.length) return toast.error("Please fill all fields");
 
-    dispatch(createBinPickupCentre({ ...formData }));
+    // Find driver fullName by ID
+    const driverObj = drivers.find((d) => d._id === formData.driver);
+    const driverFullName = driverObj ? driverObj.fullName : "";
+
+    dispatch(createBinPickupCentre({ ...formData, driver: driverFullName }));
     setShowAdd(false);
+
     // Reset form
     setFormData({
       name: "",
@@ -101,22 +108,34 @@ const BinPickupCentresTable = () => {
     });
   };
 
+  // Delete flow
   const confirmDelete = (centre) => {
     setDeleteTarget(centre);
     setPopupPos("bottom-left");
     setShowConfirmDelete(true);
   };
-
   const handleDelete = () => {
     dispatch(deleteBinPickupCentre(deleteTarget._id));
     setShowConfirmDelete(false);
   };
 
+  // Map dialog
   const openMap = (lat, lon) => {
     setMapCoords({ lat, lon });
     setShowMap(true);
   };
 
+  // Prepare table data: add driverName field
+  const centresWithDriverName = centres.map((centre) => {
+    // centre.driver originally holds the ObjectId string
+    const driverObj = drivers.find((d) => d._id === centre.driver);
+    return {
+      ...centre,
+      driverName: driverObj ? driverObj.fullName : "Unassigned",
+    };
+  });
+
+  // Column action buttons
   const actionTemplate = (row) => (
     <div className="flex gap-2 justify-center">
       <button className="p-2 rounded text-white bg-green-500">
@@ -131,6 +150,7 @@ const BinPickupCentresTable = () => {
     </div>
   );
 
+  // Table header
   const header = (
     <div className="flex flex-col md:flex-row justify-between items-center mb-4">
       <h2 className="text-xl font-bold">Pickup Centres</h2>
@@ -162,21 +182,17 @@ const BinPickupCentresTable = () => {
         {centresError && <p className="text-red-600">{centresError}</p>}
         <DataTable
           ref={dt}
-          value={centres}
+          value={centresWithDriverName}
           paginator
           rows={10}
           dataKey="_id"
           filters={filters}
           loading={centresStatus === "loading" || driversStatus === "loading"}
-          globalFilterFields={["name", "region", "town"]}
+          globalFilterFields={["name", "region", "town", "driverName"]}
           className="p-datatable-striped"
         >
-          <Column field="name" header="Centre" className="text-center" />
-          <Column
-            field="driver.fullName"
-            header="Driver"
-            className="text-center"
-          />
+          <Column field="name" header="Centre Name" className="text-center" />
+          <Column field="driverName" header="Driver" className="text-center" />
           <Column field="region" header="Region" className="text-center" />
           <Column field="town" header="Town" className="text-center" />
           <Column
@@ -328,7 +344,7 @@ const BinPickupCentresTable = () => {
         modal
         draggable={false}
         resizable={false}
-        style={{ width: "60vw", height: "60vh" }}
+        style={{ width: "100vw", height: "100vh" }}
       >
         <iframe
           title="Map"

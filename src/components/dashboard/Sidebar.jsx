@@ -17,7 +17,7 @@ const Sidebar = ({ isOpen, selected, onSelect }) => {
         transform transition-all duration-300 z-20
         ${
           isOpen
-            ? "translate-x-0 w-52"
+            ? "translate-x-0 w-64"
             : "-translate-x-full lg:translate-x-0 lg:w-20"
         }
       `}

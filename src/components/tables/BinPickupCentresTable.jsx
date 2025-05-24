@@ -199,10 +199,10 @@ const BinPickupCentresTable = () => {
             header="Location"
             body={(row) => (
               <button
-                className="underline"
+                className="underline hover:cursor-pointer"
                 onClick={() => openMap(row.lat, row.lon)}
               >
-                View
+                View Location
               </button>
             )}
             className="text-center"
@@ -347,13 +347,13 @@ const BinPickupCentresTable = () => {
         style={{ width: "100vw", height: "100vh" }}
       >
         <iframe
-          title="Map"
+          title="Directions"
           width="100%"
           height="100%"
           frameBorder="0"
-          src={`https://www.google.com/maps/embed/v1/view?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&center=${mapCoords.lat},${mapCoords.lon}&zoom=15`}
           allowFullScreen
-        />
+          src={`https://www.google.com/maps/embed/v1/directions?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&origin=Current+Location&destination=${mapCoords.lat},${mapCoords.lon}`}
+        ></iframe>
       </Dialog>
     </>
   );

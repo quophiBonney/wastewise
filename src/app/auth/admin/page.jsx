@@ -35,7 +35,7 @@ const page = () => {
         className={`
             flex-1 flex flex-col
             transition-all duration-300
-            ${isOpen ? "lg:ml-52" : "lg:ml-20"}
+            ${isOpen ? "lg:ml-64" : "lg:ml-20"}
           `}
       >
         <AppBar toggleSidebar={toggle} />

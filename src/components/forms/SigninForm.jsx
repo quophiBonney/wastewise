@@ -58,8 +58,7 @@ const [formData, setFormData] = useState({
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Enter email address"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-              
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"            
               />
             </div>
             <div className="">

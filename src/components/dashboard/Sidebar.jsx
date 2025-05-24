@@ -6,6 +6,7 @@ const Sidebar = ({ isOpen, selected, onSelect }) => {
     { key: "dashboard", label: "Dashboard" },
     { key: "bin requests", label: "Bin Requests" },
     { key: "pickup centres", label: "Pickup Centres" },
+    {key: "users", label: "Users"},
     { key: "profile", label: "Profile" },
     { key: "settings", label: "Settings" },
     { key: "logout", label: "Logout" },

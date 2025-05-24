@@ -157,8 +157,8 @@ const BinPickupCentresTable = () => {
       <div className="flex gap-2">
         <input
           type="search"
-          placeholder="Search..."
-          className="p-2 border rounded"
+          placeholder="Search by region, name..."
+          className="w-full bg-white text-black md:w-56 px-2 p-2 border border-gray-300 rounded focus:outline-0"
           onInput={(e) =>
             setFilters({
               global: { value: e.target.value, matchMode: "contains" },
@@ -166,7 +166,7 @@ const BinPickupCentresTable = () => {
           }
         />
         <button
-          className="p-2 bg-green-600 text-white rounded"
+          className="w-full px-5 text-white p-2 bg-green-500 rounded"
           onClick={() => setShowAdd(true)}
         >
           Add Centre
@@ -231,13 +231,13 @@ const BinPickupCentresTable = () => {
             value={formData.name}
             onChange={onInputChange}
             placeholder="Centre Name"
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
           />
           <select
             name="driver"
             value={formData.driver}
             onChange={onInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
           >
             <option value="" disabled>
               {driversStatus === "loading"
@@ -254,7 +254,7 @@ const BinPickupCentresTable = () => {
             name="region"
             value={formData.region}
             onChange={onInputChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
           >
             <option value="" disabled>
               Select Region
@@ -270,7 +270,7 @@ const BinPickupCentresTable = () => {
             value={formData.town}
             onChange={onInputChange}
             disabled={!formData.region}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
           >
             <option value="" disabled>
               {formData.region ? "Select Town" : "Select region first"}
@@ -287,14 +287,14 @@ const BinPickupCentresTable = () => {
               value={formData.lat}
               onChange={onInputChange}
               placeholder="Latitude"
-              className="p-2 border rounded"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
             />
             <input
               name="lon"
               value={formData.lon}
               onChange={onInputChange}
               placeholder="Longitude"
-              className="p-2 border rounded"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
             />
           </div>
           <button

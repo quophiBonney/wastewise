@@ -29,14 +29,14 @@ setVisible(true);
       <h2 className="m-0 text-xl font-bold">Bin Requests</h2>
       <input
         type="search"
-        className="w-full md:w-1/3 rounded-lg bg-white p-3 shadow-sm"
+        className="w-full md:w-64 rounded bg-white p-2 focus:outline-0 shadow-sm"
         onInput={(e) =>
           setFilters({
             ...filters,
             global: { value: e.target.value, matchMode: "contains" },
           })
         }
-        placeholder="Search by bin code, region, town, status..."
+        placeholder="Search by bin code, region..."
       />
     </div>
   );

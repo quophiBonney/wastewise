@@ -5,6 +5,7 @@ import LandingPage from './LandingPage/LandingPage'
 import { useState } from 'react'
 import BinRequests from './bin requests/page'
 import PickupCentres from './pickup centres/PickupCentres'
+import UsersTable from '@/components/tables/UsersTable'
 
 
 const page = () => {
@@ -20,6 +21,8 @@ const page = () => {
         return <BinRequests />;
       case "pickup centres":
         return <PickupCentres/>
+        case "users": 
+        return <UsersTable/>
     }
   };
   return (

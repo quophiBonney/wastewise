@@ -1,12 +1,11 @@
-"use client"
-import AppBar from '@/components/dashboard/AppBar'
-import Sidebar from '@/components/dashboard/Sidebar'
-import LandingPage from './LandingPage/LandingPage'
-import { useState } from 'react'
-import BinRequests from './bin requests/page'
-import PickupCentres from './pickup centres/PickupCentres'
-import UsersTable from '@/components/tables/UsersTable'
-
+"use client";
+import AppBar from "@/components/dashboard/AppBar";
+import Sidebar from "@/components/dashboard/Sidebar";
+import LandingPage from "./LandingPage/LandingPage";
+import { useState } from "react";
+import BinRequests from "./bin requests/page";
+import PickupCentres from "./pickup centres/PickupCentres";
+import UsersTable from "./users/page";
 
 const page = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -20,14 +19,28 @@ const page = () => {
       case "bin requests":
         return <BinRequests />;
       case "pickup centres":
-        return <PickupCentres/>
-        case "users": 
-        return <UsersTable/>
+        return <PickupCentres />;
+      case "users":
+        return <UsersTable />;
+      default:
+        return null;
     }
   };
+
+  // New handler to select menu item and close sidebar on mobile
+  const handleSelect = (key) => {
+    setSelected(key);
+    setIsOpen(false);
+  };
+
   return (
     <>
-      <Sidebar isOpen={isOpen} selected={selected} onSelect={setSelected} />
+      <Sidebar
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        selected={selected}
+        onSelect={handleSelect}
+      />
       {isOpen && (
         <div
           onClick={toggle}

@@ -11,7 +11,6 @@ import { Dialog } from "primereact/dialog";
 
 const BinRequestTable = () => {
   const [visible, setVisible] = useState(false);
-   // track where the dialog should appear
 const [position, setPosition] = useState("bottom");
  const show = (newPosition) => {
    setPosition(newPosition);

@@ -1,16 +1,26 @@
 import React from "react";
 import { MdDashboardCustomize } from "react-icons/md";
 
-const Sidebar = ({ isOpen, selected, onSelect }) => {
+const Sidebar = ({ isOpen, selected, onSelect, setIsOpen }) => {
   const menuItems = [
     { key: "dashboard", label: "Dashboard" },
     { key: "bin requests", label: "Bin Requests" },
     { key: "pickup centres", label: "Pickup Centres" },
-    {key: "users", label: "Users"},
+    { key: "users", label: "Users" },
     { key: "profile", label: "Profile" },
     { key: "settings", label: "Settings" },
     { key: "logout", label: "Logout" },
   ];
+
+  const handleItemClick = (key) => {
+    onSelect(key);
+
+    // Collapse sidebar only on mobile view
+    if (window.innerWidth < 1024) {
+      setIsOpen(false);
+    }
+  };
+
   return (
     <aside
       className={`
@@ -38,7 +48,7 @@ const Sidebar = ({ isOpen, selected, onSelect }) => {
           {menuItems.map(({ key, label }) => (
             <li
               key={key}
-              onClick={() => onSelect(key)}
+              onClick={() => handleItemClick(key)}
               className={`
                 w-full px-4 py-2 flex items-center cursor-pointer
                 hover:bg-gray-100 rounded-lg

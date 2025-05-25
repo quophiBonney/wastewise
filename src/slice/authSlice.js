@@ -33,18 +33,24 @@ export const getDrivers = createAsyncThunk(
 // slice/authSlice.js
 
 export const loginUser = createAsyncThunk(
-  "auth/login",                        // make sure the action type matches your slice
+  "auth/login",
   async (credentials, thunkAPI) => {
     try {
       const response = await axios.post("/api/auth/login", credentials);
-      return response.data;            // should include { token, user, message }
+      return response.data;
     } catch (error) {
-      // pull out a clean message from the server if it exists
       const resp = error.response?.data || {};
       const message = resp.message || "Login failed";
-      // rejectWithValue so we can access `action.payload` in extraReducers
       return thunkAPI.rejectWithValue(message);
     }
+  }
+);
+
+export const getUsers = createAsyncThunk(
+  "auth/getUsers",
+  async () => {
+    const response = await axios.get("/api/auth/users");
+    return response.data;
   }
 );
 
@@ -65,10 +71,25 @@ const initialState = {
 
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: {
+    user: [], // This should match the expected value in your table
+    status: "idle",
+    error: null,
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(getUsers.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getUsers.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+      })
+      .addCase(getUsers.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload?.message || action.error.message;
+      })
       .addCase(signupUser.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -116,7 +137,7 @@ const authSlice = createSlice({
       })
       .addCase(getDrivers.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message
+        state.error = action.error.message;
       });
   },
 });

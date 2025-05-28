@@ -5,9 +5,7 @@ import { Column } from "primereact/column";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getUsers, signupUser
-} from "@/slice/authSlice";
+import { getUsers, signupUser } from "@/slice/authSlice";
 import { BiSolidPencil, BiSolidTrash } from "react-icons/bi";
 import { Dialog } from "primereact/dialog";
 import regions from "@/app/utils/cities.json";
@@ -36,11 +34,11 @@ const UsersTable = () => {
     town: "",
     password: "",
     role: "user",
-    location: {lat: null, lng: null},
+    location: { lat: null, lng: null },
   });
 
-   const towns = formData.region ? regions[formData.region] : [];
-  
+  const towns = formData.region ? regions[formData.region] : [];
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -53,22 +51,10 @@ const UsersTable = () => {
   // Form submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    const requiredFields = [
-      "fullName",
-      "email",
-      "region",
-      "town",
-      "password",
-    ];
+    const requiredFields = ["fullName", "email", "region", "town", "password"];
     const emptyFields = requiredFields.filter((field) => !formData[field]);
 
     if (emptyFields.length > 0) {
-      // emptyFields.forEach((field) => {
-      //   // toast.error(
-      //   //   `${field.charAt(0).toUpperCase() + field.slice(1)} is required`
-      //   // );
-      //   toast.error("All fields are required")
-      // });
       toast.error("All fields are required");
       return;
     }
@@ -95,7 +81,8 @@ const UsersTable = () => {
   };
 
   const onGeoError = (error) => {
-    console.error("Geolocation error:", error);
+    console.error("Geolocation error:", error.message || error);
+    toast.error("Failed to get your location.");
   };
 
   const requestUserLocation = () => {
@@ -108,13 +95,15 @@ const UsersTable = () => {
     }
   };
 
+  const hasMounted = useRef(false);
+
   useEffect(() => {
-    if (status === "succeeded") {
-      toast.success(user.role, "Added successfully!")
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
     }
 
     if (status === "failed" && error) {
-      // Handle field-specific errors first
       if (error.fieldErrors) {
         Object.entries(error.fieldErrors).forEach(([field, messages]) => {
           messages.forEach((msg) => {
@@ -124,13 +113,11 @@ const UsersTable = () => {
           });
         });
       } else {
-        // General error message
         toast.error(error);
       }
     }
     requestUserLocation();
   }, [status, error, user, message]);
-
 
   const confirmDelete = (centre) => {
     setDeleteTarget(centre);
@@ -138,16 +125,13 @@ const UsersTable = () => {
     setShowConfirmDelete(true);
   };
   const handleDelete = () => {
-    // dispatch(delete(deleteTarget._id));
     setShowConfirmDelete(false);
   };
 
-  // Map dialog
   const openMap = (lat, lon) => {
     setMapCoords({ lat, lon });
     setShowMap(true);
   };
-
 
   // Column action buttons
   const actionTemplate = (row) => (
@@ -215,7 +199,7 @@ const UsersTable = () => {
             body={(row) => (
               <button
                 className="underline hover:cursor-pointer"
-                onClick={() => openMap(row.lat, row.lon)}
+                onClick={() => openMap(row.location.lat, row.location.lng)}
               >
                 View Location
               </button>
@@ -232,7 +216,7 @@ const UsersTable = () => {
 
       {/* Add Dialog */}
       <Dialog
-        header="Add Pickup Centre"
+        header="Add New User"
         visible={showAdd}
         modal
         draggable={false}
@@ -253,72 +237,78 @@ const UsersTable = () => {
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
             />
           </div>
-          <div>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="Enter email address"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-            />
-          </div>
-          <div>
-            <label htmlFor="role">Role</label>
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleInputChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-            >
-              <option value="" disabled>
-                Select Role
-              </option>
-              <option value="admin">Admin</option>
-              <option value="supervisor">Supervisor</option>
-              <option value="driver">Driver</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="region">Region</label>
-            <select
-              id="region"
-              name="region"
-              value={formData.region}
-              onChange={handleInputChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-            >
-              <option value="" disabled>
-                Select region
-              </option>
-              {Object.keys(regions).map((regionName) => (
-                <option key={regionName} value={regionName}>
-                  {regionName}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Enter email address"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
+              />
+            </div>
+            <div>
+              <label htmlFor="role">Role</label>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleInputChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
+              >
+                <option value="" disabled>
+                  Select Role
                 </option>
-              ))}
-            </select>
+                <option value="admin">Admin</option>
+                <option value="supervisor">Supervisor</option>
+                <option value="driver">Driver</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label htmlFor="town">City/Town</label>
-            <select
-              id="town"
-              name="town"
-              value={formData.town}
-              onChange={handleInputChange}
-              disabled={!formData.region}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
-            >
-              <option value="" disabled>
-                {formData.region ? "Select city/town" : "Select a region first"}
-              </option>
-              {towns.map((town) => (
-                <option key={town} value={town}>
-                  {town}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="region">Region</label>
+              <select
+                id="region"
+                name="region"
+                value={formData.region}
+                onChange={handleInputChange}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
+              >
+                <option value="" disabled>
+                  Select region
                 </option>
-              ))}
-            </select>
+                {Object.keys(regions).map((regionName) => (
+                  <option key={regionName} value={regionName}>
+                    {regionName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="town">City/Town</label>
+              <select
+                id="town"
+                name="town"
+                value={formData.town}
+                onChange={handleInputChange}
+                disabled={!formData.region}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-teal-500/20"
+              >
+                <option value="" disabled>
+                  {formData.region
+                    ? "Select city/town"
+                    : "Select a region first"}
+                </option>
+                {towns.map((town) => (
+                  <option key={town} value={town}>
+                    {town}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div>
             <label htmlFor="password">Password</label>
@@ -334,7 +324,7 @@ const UsersTable = () => {
           </div>
           <button
             type="submit"
-            className="w-full p-2 bg-green-600 text-white rounded"
+            className="w-full p-2 hover:cursor-pointer bg-green-600 text-white rounded"
           >
             Save User
           </button>
@@ -373,7 +363,7 @@ const UsersTable = () => {
 
       {/* Map Dialog */}
       <Dialog
-        header="Pickup Centre Location"
+        header="User Location"
         visible={showMap}
         onHide={() => setShowMap(false)}
         modal

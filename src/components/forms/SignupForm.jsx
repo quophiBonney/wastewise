@@ -79,7 +79,8 @@ const { status, error, user, message } = useSelector((state) => state.auth);
   };
 
   const onGeoError = (error) => {
-    console.error("Geolocation error:", error);
+    console.error("Geolocation error:", error.message || error);
+    toast.error("Failed to get your location.");
   };
 
   const requestUserLocation = () => {

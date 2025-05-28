@@ -5,7 +5,10 @@ import axios from "axios";
 export const createBinPickupCentre = createAsyncThunk(
   "bins/pickups",
   async (pickupData) => {
-    const response = await axios.post("/api/bins/pickups/add-centre", pickupData);
+    const response = await axios.post(
+      "/api/bins/pickups/add-centre",
+      pickupData
+    );
     return response.data;
   }
 );
@@ -21,7 +24,10 @@ export const getBinPickupCentres = createAsyncThunk(
 export const updateBinPickupCentre = createAsyncThunk(
   "bins/pickups/update",
   async ({ id, ...fields }) => {
-    const response = await axios.put(`/api/bins/pickups/update-centre/${id}`, fields);
+    const response = await axios.put(
+      `/api/bins/pickups/update-centre/${id}`,
+      fields
+    );
     return response.data;
   }
 );
@@ -29,19 +35,21 @@ export const updateBinPickupCentre = createAsyncThunk(
 export const getBinPickupLocations = createAsyncThunk(
   "bins/pickups/locations",
   async () => {
-    const response = await axios.get(
-      `/api/bins/pickups/get-locations`,
-    );
+    const response = await axios.get(`/api/bins/pickups/get-locations`);
     return response.data;
   }
 );
+
 export const getBinPickupAreas = createAsyncThunk(
   "bins/pickups/area",
-  async () => {
-    const response = await axios.get(`/api/bins/pickups/get-areas`);
+  async ({ region, town }) => {
+    const response = await axios.get(`/api/bins/pickups/get-areas`, {
+      params: { region, town },
+    });
     return response.data;
   }
 );
+
 export const deleteBinPickupCentre = createAsyncThunk(
   "request/delete",
   async (id) => {
@@ -52,6 +60,9 @@ export const deleteBinPickupCentre = createAsyncThunk(
 
 // Initial State
 const initialState = {
+  centres: [], // from getBinPickupCentres
+  locations: [], // from getBinPickupLocations
+  pickupAreas: [],
   items: [],
   status: "idle",
   error: null,
@@ -71,7 +82,7 @@ const pickupsSlice = createSlice({
       })
       .addCase(getBinPickupCentres.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
+        state.centres = action.payload;
       })
       .addCase(getBinPickupCentres.rejected, (state, action) => {
         state.status = "failed";
@@ -84,7 +95,7 @@ const pickupsSlice = createSlice({
       })
       .addCase(getBinPickupLocations.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
+        state.locations = action.payload;
       })
       .addCase(getBinPickupLocations.rejected, (state, action) => {
         state.status = "failed";
@@ -97,7 +108,7 @@ const pickupsSlice = createSlice({
       })
       .addCase(getBinPickupAreas.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
+        state.pickupAreas = action.payload;
       })
       .addCase(getBinPickupAreas.rejected, (state, action) => {
         state.status = "failed";

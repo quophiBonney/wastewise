@@ -1,6 +1,6 @@
 "use client";
-import AppBar from "@/components/Dashboard/AppBar";
-import Sidebar from "@/components/Dashboard/Sidebar";
+import AppBar from "@/components/dashboard/AppBar";
+import Sidebar from "@/components/dashboard/Sidebar";
 import LandingPage from "./LandingPage/LandingPage";
 import { useState } from "react";
 import BinRequests from "./bin requests/page";

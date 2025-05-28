@@ -1,12 +1,13 @@
 "use client";
 import { Dialog } from "primereact/dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import regions from "@/app/utils/cities.json";
 import { GrDirections } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
 import { getBinPickupAreas } from "@/slice/binPickupsSlice";
-
+import BinMap from "@/components/maps/BinMap";
 const BinCentresHero = () => {
+  const [userLocation, setUserLocation] = useState(null);
     const [showMap, setShowMap] = useState(false);
     const [mapCoords, setMapCoords] = useState({ lat: 0, lon: 0 });
   const dispatch = useDispatch();
@@ -50,7 +51,23 @@ const BinCentresHero = () => {
   }));
 
   const towns = formData.region ? regions[formData.region] : [];
-
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      const watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          setUserLocation([
+            position.coords.latitude,
+            position.coords.longitude,
+          ]);
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+      return () => navigator.geolocation.clearWatch(watchId);
+    }
+  }, []);
   return (
     <>
       <section className="mt-10 mb-10">
@@ -138,27 +155,20 @@ const BinCentresHero = () => {
           </div>
         )}
       </section>
-      <div>
-        <Dialog
-          header="Bin Centre Directions"
-          visible={showMap}
-          onHide={() => setShowMap(false)}
-          modal
-          draggable={false}
-          resizable={false}
-          className="bg-white rounded-lg p-3"
-          style={{ width: "90vw", height: "90vh" }}
-        >
-          <iframe
-            title="Directions"
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            allowFullScreen
-            src={`https://www.google.com/maps/embed/v1/directions?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&origin=Current+Location&destination=${mapCoords.lat},${mapCoords.lon}`}
-          ></iframe>
-        </Dialog>
-      </div>
+      <Dialog
+        header="Bin Centre Directions"
+        visible={showMap}
+        onHide={() => setShowMap(false)}
+        modal
+        draggable={false}
+        resizable={false}
+        className="bg-white rounded-lg p-3 w-full h-[500px]"
+      >
+        <BinMap
+          userLocation={userLocation}
+          binLocation={[mapCoords.lat, mapCoords.lon]}
+        />
+      </Dialog>
     </>
   );
 };

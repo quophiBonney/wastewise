@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import regions from "@/app/utils/cities.json";
 import { GrDirections } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
+import dynamic from "next/dynamic";
 import { getBinPickupAreas } from "@/slice/binPickupsSlice";
-import BinMap from "@/components/maps/BinMap";
+const BinMap = dynamic(() => import("@/components/maps/BinMap"), { ssr: false });
 const BinCentresHero = () => {
   const [userLocation, setUserLocation] = useState(null);
     const [showMap, setShowMap] = useState(false);

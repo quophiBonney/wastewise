@@ -20,12 +20,11 @@ import { toast } from "react-hot-toast";
 const BinPickupCentresTable = () => {
   const dispatch = useDispatch();
   const {
-    items: centres = [],
+   centres = [],
     message,
     status: centresStatus,
     error: centresError,
   } = useSelector((state) => state.pickups);
-  // Map drivers from auth slice
   const {
     items: drivers = [],
     status: driversStatus,

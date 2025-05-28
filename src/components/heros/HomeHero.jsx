@@ -66,14 +66,18 @@ const HomeHero = () => {
         </p>
         <div className="flex flex-col md:flex-row md:w-auto gap-3">
           <button
-            className="bg-green-600 text-white rounded-lg shadow-md px-3 p-3 w-52 hover:cursor-pointer hover:bg-green-500"
+            className="bg-green-600 text-white rounded-lg shadow-md px-3 p-3 w-52 hover:cursor-pointer 
+            transition-colors duration-200 
+             hover:opacity-90 hover:scale-105"
             onClick={() => setIsOpen(true)}
           >
-            Get A Bin
+            Request For Bin
           </button>
           <Link
             href="/bin/centres"
-            className="flex justify-center border-2 border-green-600 text-green-500 rounded-lg shadow-md px-3 p-3 w-52 hover:bg-green-500 hover:text-white"
+            className="flex justify-center border-2 border-green-600 text-green-500 rounded-lg shadow-md px-3 p-3 w-52 
+            transition-colors duration-200 
+            hover:scale-105"
           >
             Explore Bin Centres
           </Link>
@@ -192,7 +196,9 @@ const HomeHero = () => {
                   </select>
                 </div>
                 {status === "loading" && (
-                  <p className="text-blue-600 text-center">Sending request...</p>
+                  <p className="text-blue-600 text-center">
+                    Sending request...
+                  </p>
                 )}
                 {status === "failed" && (
                   <p className="text-red-600 text-center">Error: {error}</p>

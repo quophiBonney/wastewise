@@ -4,20 +4,25 @@ import { useState, useEffect } from "react";
 import regions from "@/app/utils/cities.json";
 import { GrDirections } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
-import dynamic from "next/dynamic";
 import { getBinPickupAreas } from "@/slice/binPickupsSlice";
-const BinMap = dynamic(() => import("@/components/maps/BinMap"), { ssr: false });
-const BinCentresHero = () => {
-  const [userLocation, setUserLocation] = useState(null);
-    const [showMap, setShowMap] = useState(false);
-    const [mapCoords, setMapCoords] = useState({ lat: 0, lon: 0 });
-  const dispatch = useDispatch();
-  const pickupAreas = useSelector((state) => state.pickups.pickupAreas);
+import { Skeleton } from "primereact/skeleton";
 
-  const [formData, setFormData] = useState({
-    region: "",
-    town: "",
-  });
+
+const BinCentresHero = () => {
+  const dispatch = useDispatch();
+  const [showMap, setShowMap] = useState(false);
+  const [mapCoords, setMapCoords] = useState({ lat: 0, lon: 0 });
+  const [formData, setFormData] = useState({ region: "", town: "" });
+
+  const pickupAreas = useSelector((state) => state.pickups.pickupAreas);
+  const status = useSelector((state) => state.pickups.status);
+
+  const info = Object.entries(regions).map(([regionName, cities]) => ({
+    name: regionName,
+    cityCount: cities.length,
+  }));
+
+  const towns = formData.region ? regions[formData.region] : [];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +34,6 @@ const BinCentresHero = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const { region, town } = formData;
 
     if (!region || !town) {
@@ -37,38 +41,9 @@ const BinCentresHero = () => {
       return;
     }
 
-    // Dispatch Redux action with query params
     dispatch(getBinPickupAreas({ region, town }));
   };
 
-  const handleGetDirection = (location) => {
-    // Replace this with actual navigation/map logic if needed
-    console.log("Getting direction to:", location);
-  };
-
-  const info = Object.entries(regions).map(([regionName, cities]) => ({
-    name: regionName,
-    cityCount: cities.length,
-  }));
-
-  const towns = formData.region ? regions[formData.region] : [];
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      const watchId = navigator.geolocation.watchPosition(
-        (position) => {
-          setUserLocation([
-            position.coords.latitude,
-            position.coords.longitude,
-          ]);
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-        },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-      );
-      return () => navigator.geolocation.clearWatch(watchId);
-    }
-  }, []);
   return (
     <>
       <section className="mt-10 mb-10">
@@ -106,6 +81,7 @@ const BinCentresHero = () => {
               name="town"
               value={formData.town}
               onChange={handleInputChange}
+              disabled={!formData.region}
             >
               <option value="" disabled>
                 {formData.region ? "Select city/town" : "Select a region first"}
@@ -121,18 +97,33 @@ const BinCentresHero = () => {
           <div>
             <input
               type="submit"
-              value="Find Nearest Bin Centre"
+              value={
+                status === "loading"
+                  ? "Searching..."
+                  : "Find Nearest Bin Centre"
+              }
               className="w-full p-3 bg-green-600 rounded-lg text-white cursor-pointer"
+              disabled={status === "loading"}
             />
           </div>
         </form>
 
-        {pickupAreas && pickupAreas.length > 0 && (
+        {status === "loading" ? (
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="p-4">
+                <Skeleton width="100%" height="3rem" className="mb-2" />
+                <Skeleton width="80%" height="1.5rem" className="mb-2" />
+                <Skeleton width="60%" height="1.5rem" />
+              </div>
+            ))}
+          </div>
+        ) : pickupAreas && pickupAreas.length > 0 ? (
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {pickupAreas.map((area) => (
               <div
                 key={area._id}
-                className="border border-green-500/10 rounded-lg p-4 shadow hover:shadow-md transition"
+                className="border border-black/15 rounded-lg p-4 shadow-lg hover:shadow-md transition"
               >
                 <h3 className="text-lg font-semibold text-gray-800">
                   {area.name}
@@ -142,20 +133,22 @@ const BinCentresHero = () => {
                 <button
                   onClick={() => {
                     setShowMap(true);
-                    setMapCoords({
-                      lat: area.lat,
-                      lon: area.lon,
-                    });
+                    setMapCoords({ lat: area.lat, lon: area.lon });
                   }}
-                  className="mt-2 flex items-center text-blue-600 hover:underline"
+                  className="mt-2 flex items-center border border-green-500 text-green-500 hover:cursor-pointer rounded-lg px-3 py-2 transition-colors duration-200 hover:bg-green-500 hover:text-white"
                 >
-                  <GrDirections className="mr-2" /> Get Directions
+                  <GrDirections className="mr-2" /> View Location on Map
                 </button>
               </div>
             ))}
           </div>
-        )}
+        ) : status === "succeeded" ? (
+          <div className="text-center text-gray-600">
+            No bin centres found for the selected location.
+          </div>
+        ) : null}
       </section>
+
       <Dialog
         header="Bin Centre Directions"
         visible={showMap}
@@ -163,12 +156,15 @@ const BinCentresHero = () => {
         modal
         draggable={false}
         resizable={false}
-        className="bg-white rounded-lg p-3 w-full h-[500px]"
+        className="bg-white rounded-lg p-3 w-full h-full"
       >
-        <BinMap
-          userLocation={userLocation}
-          binLocation={[mapCoords.lat, mapCoords.lon]}
-        />
+        <iframe
+          title="Directions"
+          width="100%"
+          height="100%"
+          allowFullScreen
+          src={`https://www.google.com/maps/embed/v1/directions?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&origin=Current+Location&destination=${mapCoords.lat},${mapCoords.lon}`}
+        ></iframe>
       </Dialog>
     </>
   );

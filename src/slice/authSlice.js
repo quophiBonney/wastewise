@@ -61,18 +61,12 @@ export const logoutUser = createAsyncThunk(
     return {};
   }
 );
-const initialState = {
-  user: null,
-  token: null,
-  status: "idle",
-  error: null,
-  message: null,
-};
+
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: [], // This should match the expected value in your table
+    user: [],
     status: "idle",
     error: null,
   },

@@ -224,7 +224,7 @@ useEffect(() => {
             </div>
 
             {/* Terms */}
-            <div className="flex items-center gap-3">
+            {/* <div className="flex items-center gap-3">
               <input
                 type="checkbox"
                 id="terms"
@@ -233,7 +233,7 @@ useEffect(() => {
                 className="h-6"
               />
               <label htmlFor="terms">I agree to the terms and conditions</label>
-            </div>
+            </div> */}
 
             {/* Submit */}
             <div>
@@ -247,7 +247,7 @@ useEffect(() => {
 
           <div className="text-gray-800 mb-5 mt-5 lg:text-center">
             <p>
-              Already have an account? <Link href="/auth/signin">Login</Link>
+              Already have an account? <Link href="/">Login</Link>
             </p>
           </div>
         </div>

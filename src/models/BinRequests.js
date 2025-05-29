@@ -39,6 +39,6 @@ const binRequestsSchema = new mongoose.Schema(
 
 const binRequestsModel = mongoose.models.BinRequests
   ? mongoose.models.BinRequests
-  : mongoose.model("bins request", binRequestsSchema);
+  : mongoose.model("Bins Request", binRequestsSchema);
 
 export default binRequestsModel;

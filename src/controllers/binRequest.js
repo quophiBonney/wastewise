@@ -51,16 +51,16 @@ export const requestBin = async (req, res) => {
     const smsText = encodeURIComponent(
       `Your bin request has been received. Keep and bring this code along when coming for your bin: ${binCode}`
     );
-    try {
-      const smsUrl = `https://sms.arkesel.com/sms/api?action=send-sms&api_key=${process.env.ARKESEL_API_KEY}&to=${contact}&from=Waste%20Wise&sms=${smsText}`;
-      const response = await axios.get(smsUrl);
-      console.log("SMS sent successfully:", response.data);
-    } catch (smsErr) {
-      console.error(
-        "Error sending SMS:",
-        smsErr.response?.data || smsErr.message
-      );
-    }
+    // try {
+    //   const smsUrl = `https://sms.arkesel.com/sms/api?action=send-sms&api_key=${process.env.ARKESEL_API_KEY}&to=${contact}&from=Waste%20Wise&sms=${smsText}`;
+    //   const response = await axios.get(smsUrl);
+    //   console.log("SMS sent successfully:", response.data);
+    // } catch (smsErr) {
+    //   console.error(
+    //     "Error sending SMS:",
+    //     smsErr.response?.data || smsErr.message
+    //   );
+    // }
     return res
       .status(201)
       .json({
@@ -68,7 +68,7 @@ export const requestBin = async (req, res) => {
       });
   } catch (err) {
     console.error("Bin request error:", err);
-    return res.status(500).json({ error: "Internal server error." });
+    return res.status(500).json({ message: "Internal server error." });
   }
 };
 export const fetchBinRequest = async (req, res) => {
@@ -81,7 +81,7 @@ export const fetchBinRequest = async (req, res) => {
     return res.status(200).json(binRequests);
   } catch (err) {
     console.error("Error fetching bin requests:", err);
-    return res.status(500).json({ error: "Internal server error." });
+    return res.status(500).json({ message: "Internal server error." });
   }
 };
 

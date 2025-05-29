@@ -1,11 +1,11 @@
 "use client";
 import AppBar from "@/components/dashboard/AppBar";
 import Sidebar from "@/components/dashboard/Sidebar";
-import LandingPage from "./LandingPage/LandingPage";
+import LandingPage from "../LandingPage/LandingPage";
 import { useState } from "react";
-import BinRequests from "./bin requests/page";
-import PickupCentres from "./pickup centres/PickupCentres";
-import UsersTable from "./users/page";
+import BinRequests from "../bin requests/page";
+import PickupCentres from "../pickup centres/PickupCentres";
+import UsersTable from "../users/page";
 
 const Page = () => {
   const [isOpen, setIsOpen] = useState(true);

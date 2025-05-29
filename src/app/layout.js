@@ -9,7 +9,7 @@ import { store } from "@/store/store";
 import { PrimeReactProvider } from "primereact/api";
 export default function RootLayout({ children }) {
   const pathname = usePathname()
- const noFooter = ["/auth/signin", "/auth/signup", "/auth/admin"];
+ const noFooter = ["/auth/signin", "/auth/signup", "/auth/admin/dashboard"];
   return (
     <html lang="en">
       <body suppressHydrationWarning className={`bg-gray-50 antialiased`}>

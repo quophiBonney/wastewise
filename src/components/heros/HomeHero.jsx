@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { requestBin } from "@/slice/requestBinSlice";
@@ -6,10 +6,30 @@ import bin from "@/assets/images/bin-illustration.png";
 import Image from "next/image";
 import Link from "next/link";
 import regions from "@/app/utils/cities.json";
+import { toast } from "react-hot-toast";
+import { binRequestValidations } from "@/validations/binRequestValidations";
 
 const HomeHero = () => {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.request);
+
+  // form
+  const [formData, setFormData] = useState({
+    houseAddress: "",
+    contact: "",
+    selectedRegion: "",
+    selectedTown: "",
+    houseHoldSize: "",
+  });
+
+  const onInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      ...(name === "region" ? { town: "" } : {}),
+      [name]: value,
+    }));
+  };
 
   const [isOpen, setIsOpen] = useState(false);
   const info = Object.entries(regions).map(([regionName, cities]) => ({
@@ -17,38 +37,61 @@ const HomeHero = () => {
     cityCount: cities.length,
   }));
 
-  const [selectedRegion, setSelectedRegion] = useState("");
-  const towns = selectedRegion ? regions[selectedRegion] : [];
+  const towns = formData.selectedRegion ? regions[formData.selectedRegion] : [];
 
-  // Form state
-  const [houseAddress, setHouseAddress] = useState("");
-  const [contact, setcontact] = useState("");
-  const [selectedTown, setSelectedTown] = useState("");
-  const [houseHoldSize, sethouseHoldSize] = useState("");
-
-  // Close modal on successful submission
+  // Close modal on successful submission and show toast messages
   useEffect(() => {
     if (status === "succeeded") {
+      toast.success("Request submitted successfully!");
       setIsOpen(false);
-      // Reset form fields
-      setHouseAddress("");
-      setcontact("");
-      setSelectedRegion("");
-      setSelectedTown("");
-      sethouseHoldSize("");
+      // Reset form
+      setFormData({
+        houseAddress: "",
+        contact: "",
+        selectedRegion: "",
+        selectedTown: "",
+        houseHoldSize: "",
+      });
+    } else if (status === "failed") {
+      if (error?.toLowerCase().includes("already requested")) {
+        toast.error("You've already requested a bin.");
+      } else {
+        toast.error(error || "Failed to submit request.");
+      }
     }
-  }, [status]);
+  }, [status, error]);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    try {
+      binRequestValidations.parse({
+        houseAddress: formData.houseAddress,
+        contact: formData.contact,
+        region: formData.selectedRegion,
+        town: formData.selectedTown,
+        houseHoldSize: formData.houseHoldSize,
+      });
+    } catch (validationError) {
+      if (validationError.errors) {
+        validationError.errors.forEach((err) => {
+          toast.error(err.message);
+        });
+      } else {
+        toast.error("Invalid input");
+      }
+      return;
+    }
+
     // Dispatch requestBin thunk with form data
     dispatch(
       requestBin({
-        houseAddress,
-        contact,
-        region: selectedRegion,
-        town: selectedTown,
-        houseHoldSize,
+        houseAddress: formData.houseAddress,
+        contact: formData.contact,
+        region: formData.selectedRegion,
+        town: formData.selectedTown,
+        houseHoldSize: formData.houseHoldSize,
       })
     );
   };
@@ -121,31 +164,31 @@ const HomeHero = () => {
                   <div>
                     <input
                       type="text"
-                      placeholder="Hse Address"
+                      placeholder="House Address"
                       className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
-                      value={houseAddress}
-                      onChange={(e) => setHouseAddress(e.target.value)}
-                      required
+                      name="houseAddress"
+                      value={formData.houseAddress}
+                      onChange={onInputChange}
                     />
                   </div>
                   <div>
                     <input
                       type="text"
                       placeholder="Phone Number"
+                      name="contact"
                       className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
-                      value={contact}
-                      onChange={(e) => setcontact(e.target.value)}
-                      required
+                      value={formData.contact}
+                      onChange={onInputChange}
                     />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <select
+                      name="selectedRegion"
                       className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
-                      value={selectedRegion}
-                      onChange={(e) => setSelectedRegion(e.target.value)}
-                      required
+                      value={formData.selectedRegion}
+                      onChange={onInputChange}
                     >
                       <option value="" disabled>
                         Select region
@@ -159,15 +202,14 @@ const HomeHero = () => {
                   </div>
                   <div>
                     <select
-                      id="town"
+                      name="selectedTown"
                       className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
-                      disabled={!selectedRegion}
-                      value={selectedTown}
-                      onChange={(e) => setSelectedTown(e.target.value)}
-                      required
+                      disabled={!formData.selectedRegion}
+                      value={formData.selectedTown}
+                      onChange={onInputChange}
                     >
                       <option value="" disabled>
-                        {selectedRegion
+                        {formData.selectedRegion
                           ? "Select town"
                           : "Select a region first"}
                       </option>
@@ -181,9 +223,9 @@ const HomeHero = () => {
                 </div>
                 <div>
                   <select
-                    value={houseHoldSize}
-                    onChange={(e) => sethouseHoldSize(e.target.value)}
-                    required
+                    value={formData.houseHoldSize}
+                    name="houseHoldSize"
+                    onChange={onInputChange}
                     className="w-full p-3 border border-gray-200 ring-0 focus:outline-0 rounded-lg"
                   >
                     <option value="" disabled>
@@ -200,9 +242,6 @@ const HomeHero = () => {
                     Sending request...
                   </p>
                 )}
-                {status === "failed" && (
-                  <p className="text-red-600 text-center">Error: {error}</p>
-                )}
                 <div className="mt-4 sm:flex sm:items-center sm:-mx-2">
                   <button
                     type="button"
@@ -211,13 +250,13 @@ const HomeHero = () => {
                   >
                     Cancel
                   </button>
-                  <button
+                  <input
                     type="submit"
                     disabled={status === "loading"}
-                    className="w-full px-4 p-3 mt-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-600 rounded-md sm:mt-0 sm:w-1/2 sm:mx-2 hover:bg-green-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Send Request
-                  </button>
+                    className="w-full px-4 p-3 mt-3 text-sm font-medium tracking-wide text-white capitalize transition-colors 
+                    hover:cursor-pointer duration-300 transform bg-green-600 rounded-md sm:mt-0 sm:w-1/2 sm:mx-2 hover:bg-green-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 disabled:opacity-50 disabled:cursor-not-allowed"
+                    value={status === "loading" ? "Sending..." : "Send Request"}
+                  />
                 </div>
               </form>
             </div>

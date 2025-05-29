@@ -3,9 +3,9 @@ import { z } from "zod";
 export const binRequestValidations = z.object({
   houseAddress: z
     .string()
-    .regex(/^[A-Za-z]{2}-\d{3}-\d{4}$/, {
+    .regex(/^[A-Za-z]{1,2}\d-\d{3}-\d{4}$/, {
       message:
-        "Invalid format: expected two letters, dash, three digits, dash, four digits.",
+        "Invalid House Address: Use Your Ghana Post Address",
     })
     .transform((str) => str.toUpperCase().trim()),
 
@@ -18,10 +18,8 @@ export const binRequestValidations = z.object({
     .string()
     .min(1, { message: "Town is required" })
     .transform((s) => s.trim()),
-
   houseHoldSize: z.string(),
-
-  contact: z.string().regex(/^\+\d{10,15}$/, {
-    message: "Invalid number: Please start with country code (e.g. +233)",
+  contact: z.string().regex(/^0\d{9,14}$/, {
+    message: "Invalid Phone Number: Must be 10 digits",
   }),
 });

@@ -30,7 +30,6 @@ export const getDrivers = createAsyncThunk(
     }
   }
 );
-// slice/authSlice.js
 
 export const loginUser = createAsyncThunk(
   "auth/login",
@@ -62,6 +61,7 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+const tokenFromStorage = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
 const authSlice = createSlice({
   name: "auth",
@@ -69,6 +69,7 @@ const authSlice = createSlice({
     user: [],
     status: "idle",
     error: null,
+    token: tokenFromStorage,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -93,6 +94,9 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.user = action.payload.user;
         state.message = action.payload.message || "Signup successful!";
+        if (typeof window !== "undefined") {
+          localStorage.setItem("token", action.payload.token);
+        }
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.status = "failed";
@@ -108,8 +112,11 @@ const authSlice = createSlice({
         state.status = "succeeded";
         state.token = action.payload.token;
         state.user = action.payload.user;
-        // back-end should return a nice message here
-        state.message = action.payload.message || "Login successful";
+        state.message = action.payload.message;
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem("token", action.payload.token);
+        }
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
@@ -120,6 +127,9 @@ const authSlice = createSlice({
         state.status = "idle";
         state.token = null;
         state.user = null;
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+        }
       })
       .addCase(getDrivers.pending, (state) => {
         state.status = "loading";

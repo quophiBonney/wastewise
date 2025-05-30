@@ -109,15 +109,9 @@ const BinCentresHero = () => {
         </form>
 
         {status === "loading" ? (
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {[...Array(6)].map((_, index) => (
-              <div key={index} className="p-4">
-                <Skeleton width="100%" height="3rem" className="mb-2" />
-                <Skeleton width="80%" height="1.5rem" className="mb-2" />
-                <Skeleton width="60%" height="1.5rem" />
-              </div>
-            ))}
-          </div>
+         <div>
+          <h3 className="text-lg text-center">Find Nearest Bins Near....</h3>
+         </div>
         ) : pickupAreas && pickupAreas.length > 0 ? (
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {pickupAreas.map((area) => (

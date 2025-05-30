@@ -62,10 +62,8 @@ const UsersTable = () => {
   };
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(getUsers());
-    }
-  }, [dispatch, status]);
+    dispatch(getUsers());
+  }, [dispatch]);
   const [locationCoords, setLocationCoords] = useState({
     lat: null,
     lon: null,

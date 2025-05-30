@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from 'next/link';
 const WhyDirty = () => {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
       <div>
         <Image src={trashcan} alt="" width={600} height={500} />
       </div>

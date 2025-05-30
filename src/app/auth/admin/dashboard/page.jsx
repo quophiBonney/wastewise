@@ -1,17 +1,35 @@
+// pages/auth/admin/dashboard/page.jsx
 "use client";
+
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+
 import AppBar from "@/components/dashboard/AppBar";
 import Sidebar from "@/components/dashboard/Sidebar";
 import LandingPage from "../LandingPage/LandingPage";
-import { useState } from "react";
 import BinRequests from "../bin requests/page";
 import PickupCentres from "../pickup centres/PickupCentres";
 import UsersTable from "../users/page";
 
-const Page = () => {
+export default function Page() {
   const [isOpen, setIsOpen] = useState(true);
-  const toggle = () => setIsOpen((o) => !o);
   const [selected, setSelected] = useState("dashboard");
 
+  const token = useSelector((state) => state.auth.token);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!token) {
+      router.replace("/auth/signin");
+    }
+  }, [token, router]);
+
+  const toggle = () => setIsOpen((o) => !o);
+  const handleSelect = (key) => {
+    setSelected(key);
+    setIsOpen(false);
+  };
   const renderContent = () => {
     switch (selected) {
       case "dashboard":
@@ -25,11 +43,6 @@ const Page = () => {
       default:
         return null;
     }
-  };
-
-  const handleSelect = (key) => {
-    setSelected(key);
-    setIsOpen(false);
   };
 
   return (
@@ -57,6 +70,4 @@ const Page = () => {
       </div>
     </>
   );
-};
-
-export default Page;
+}
